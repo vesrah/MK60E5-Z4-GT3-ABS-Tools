@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAN Message 0x5BA Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .output-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .byte-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 8px;
+            padding: 5px;
+            background: white;
+            border-radius: 3px;
+        }
+        .byte-num {
+            font-weight: bold;
+            color: #007bff;
+            min-width: 60px;
+        }
+        .byte-hex {
+            font-weight: bold;
+            color: #28a745;
+            min-width: 40px;
+        }
+        .byte-desc {
+            color: #333;
+        }
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CAN Message 0x5BA Generator</h1>
+        
+        <div class="field">
+            <label for="tcs_threshold">TCS Threshold Factor (0-250%):</label>
+            <input type="number" id="tcs_threshold" min="30" max="250" value="100" oninput="generateMessage()">
+            <div class="hint">Range: 30-250%, Resolution: 1%</div>
+        </div>
+
+        <div class="field">
+            <label for="tcs_modus">TCS Modus:</label>
+            <select id="tcs_modus" onchange="generateMessage()">
+                <option value="0">0 - TCS off</option>
+                <option value="1">1 - TCS Mode with high base threshold</option>
+                <option value="2">2 - TCS Mode with low base threshold</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Front Wheel:</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="tire_front" value="205/50/15" style="flex: 1;" oninput="updateCircumference('front')">
+                <span style="white-space: nowrap;">=</span>
+                <input type="number" id="circ_front" placeholder="mm" min="1440" max="2880" style="flex: 1;" readonly>
+                <span style="white-space: nowrap;">mm</span>
+            </div>
+            <div class="hint">Street: 205/50/15 or Slick: 27/65-18 - circumference auto-calculates</div>
+        </div>
+
+        <div class="field">
+            <label>Rear Wheel:</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="tire_rear" value="245/40/17" style="flex: 1;" oninput="updateCircumference('rear')">
+                <span style="white-space: nowrap;">=</span>
+                <input type="number" id="circ_rear" placeholder="mm" min="1440" max="2880" style="flex: 1;" readonly>
+                <span style="white-space: nowrap;">mm</span>
+            </div>
+            <div class="hint">Street: 245/40/17 or Slick: 27/65-18 - circumference auto-calculates</div>
+        </div>
+
+        <div class="field">
+            <label for="abs_mode">ABS Mode Selection (0-9, default 0):</label>
+            <input type="number" id="abs_mode" min="0" max="9" value="0" oninput="generateMessage()">
+            <div class="hint">10 positions: 0=max, 9,8,7,6,5,4,3,2,1=min</div>
+        </div>
+
+        <div class="field">
+            <label for="gear_shift">Gear Shift Status:</label>
+            <select id="gear_shift" onchange="generateMessage()">
+                <option value="0">0 - No shift in progress</option>
+                <option value="1">1 - Up shift</option>
+                <option value="2">2 - Down shift</option>
+            </select>
+        </div>
+
+        <div class="output" id="output">
+            <div style="color: #999;">Enter valid tire sizes to generate CAN message</div>
+        </div>
+    </div>
+
+    <script>
+        function parseTireSize(tireStr) {
+            // Parse slick tire size like "27/65-18" (diameter/width-rim)
+            const slickMatch = tireStr.match(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)/);
+            if (slickMatch) {
+                const diameter = parseFloat(slickMatch[1]); // inches
+                const totalDiameter = diameter * 25.4; // convert to mm
+                const circumference = Math.PI * totalDiameter;
+                return Math.round(circumference);
+            }
+            
+            // Parse street tire size like "205/55/15" or "205/55R15"
+            const streetMatch = tireStr.match(/(\d+)\/(\d+)[\/R]?(\d+)/i);
+            if (streetMatch) {
+                const width = parseInt(streetMatch[1]); // mm
+                const aspect = parseInt(streetMatch[2]); // percentage
+                const rimDiameter = parseInt(streetMatch[3]); // inches
+                
+                // Sidewall height = width * (aspect/100)
+                const sidewallHeight = width * (aspect / 100);
+                // Total diameter = rim diameter (in inches) * 25.4 + 2 * sidewall height
+                const totalDiameter = (rimDiameter * 25.4) + (2 * sidewallHeight);
+                // Circumference = π * diameter
+                const circumference = Math.PI * totalDiameter;
+                
+                return Math.round(circumference);
+            }
+            
+            return null;
+        }
+
+        function updateCircumference(wheel) {
+            const tireInput = document.getElementById(`tire_${wheel}`);
+            const circInput = document.getElementById(`circ_${wheel}`);
+            const tireSize = tireInput.value.trim();
+            
+            if (tireSize) {
+                const circ = parseTireSize(tireSize);
+                if (circ) {
+                    circInput.value = circ;
+                } else {
+                    circInput.value = '';
+                }
+            } else {
+                circInput.value = '';
+            }
+            generateMessage();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updateCircumference('front');
+            updateCircumference('rear');
+            generateMessage();
+        };
+
+        function generateMessage() {
+            // Get circumference values (already calculated)
+            const circFront = parseInt(document.getElementById('circ_front').value);
+            const circRear = parseInt(document.getElementById('circ_rear').value);
+
+            if (!circFront || !circRear) {
+                document.getElementById('output').innerHTML = '<div style="color: #999;">Enter valid tire sizes to generate CAN message</div>';
+                return;
+            }
+
+            // Validate range
+            if (circFront < 1440 || circFront > 2880) {
+                document.getElementById('output').innerHTML = `<div style="color: #dc3545;">Front wheel circumference ${circFront}mm is out of range (1440-2880mm)</div>`;
+                return;
+            }
+            if (circRear < 1440 || circRear > 2880) {
+                document.getElementById('output').innerHTML = `<div style="color: #dc3545;">Rear wheel circumference ${circRear}mm is out of range (1440-2880mm)</div>`;
+                return;
+            }
+
+            // Get other values
+            const tcsThreshold = parseInt(document.getElementById('tcs_threshold').value);
+            const tcsModus = parseInt(document.getElementById('tcs_modus').value);
+            const absMode = parseInt(document.getElementById('abs_mode').value);
+            const gearShift = parseInt(document.getElementById('gear_shift').value);
+
+            // Calculate high/low bytes for wheel circumferences
+            const circFrontHigh = Math.floor(circFront / 256);
+            const circFrontLow = circFront % 256;
+            const circRearHigh = Math.floor(circRear / 256);
+            const circRearLow = circRear % 256;
+
+            // Create 8-byte array
+            const data = new Uint8Array(8);
+            
+            data[0] = tcsThreshold & 0xFF;
+            data[1] = tcsModus & 0xFF;
+            data[2] = circFrontLow & 0xFF;
+            data[3] = circFrontHigh & 0xFF;
+            data[4] = circRearLow & 0xFF;
+            data[5] = circRearHigh & 0xFF;
+            data[6] = absMode & 0x0F;
+            data[7] = gearShift & 0x03;
+
+            // Format output
+            const hexMessage = Array.from(data)
+                .map(b => b.toString(16).toUpperCase().padStart(2, '0'))
+                .join(' ');
+            
+            const tcsModusText = ['TCS off', 'TCS Mode with high base threshold', 'TCS Mode with low base threshold'][tcsModus];
+            const gearShiftText = ['No shift in progress', 'Up shift', 'Down shift'][gearShift];
+            
+            const breakdown = `
+                <div class="byte-row">
+                    <span class="byte-num">Byte 1:</span>
+                    <span class="byte-hex">0x${data[0].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">TCS Threshold Factor: ${tcsThreshold}%</span>
+                </div>
+                <div class="byte-row">
+                    <span class="byte-num">Byte 2:</span>
+                    <span class="byte-hex">0x${data[1].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">TCS Modus: ${tcsModusText}</span>
+                </div>
+                <div class="byte-row">
+                    <span class="byte-num">Byte 3:</span>
+                    <span class="byte-hex">0x${data[2].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">Front Circumference Low Byte</span>
+                </div>
+                <div class="byte-row">
+                    <span class="byte-num">Byte 4:</span>
+                    <span class="byte-hex">0x${data[3].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">Front Circumference High Byte → ${circFront} mm</span>
+                </div>
+                <div class="byte-row">
+                    <span class="byte-num">Byte 5:</span>
+                    <span class="byte-hex">0x${data[4].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">Rear Circumference Low Byte</span>
+                </div>
+                <div class="byte-row">
+                    <span class="byte-num">Byte 6:</span>
+                    <span class="byte-hex">0x${data[5].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">Rear Circumference High Byte → ${circRear} mm</span>
+                </div>
+                <div class="byte-row">
+                    <span class="byte-num">Byte 7:</span>
+                    <span class="byte-hex">0x${data[6].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">ABS Mode Selection: ${absMode}</span>
+                </div>
+                <div class="byte-row">
+                    <span class="byte-num">Byte 8:</span>
+                    <span class="byte-hex">0x${data[7].toString(16).toUpperCase().padStart(2, '0')}</span>
+                    <span class="byte-desc">Gear Shift Status: ${gearShiftText}</span>
+                </div>
+            `;
+
+            const decimalMessage = Array.from(data).join(' ');
+            
+            document.getElementById('output').innerHTML = `
+                <div class="output-label">CAN Message:</div>
+                <div style="font-family: monospace;">ID: 0x5BA  Data: ${hexMessage}</div>
+                <div style="margin-top:15px;">
+                    <div class="output-label">Decimal Format (for AIM RaceStudio 3):</div>
+                    <div style="font-family: monospace;">${decimalMessage}</div>
+                </div>
+                <div style="margin-top:10px;">
+                    <div class="output-label">Breakdown:</div>
+                    <div>${breakdown}</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
