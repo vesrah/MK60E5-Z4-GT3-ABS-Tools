@@ -116,7 +116,7 @@
                 <input type="number" id="circ_front" placeholder="mm" min="1440" max="2880" style="flex: 1;" readonly>
                 <span style="white-space: nowrap;">mm</span>
             </div>
-            <div class="hint">Street: 205/50/15 or Slick: 27/65-18 - circumference auto-calculates</div>
+            <div class="hint">Street: 205/50/15, Slick: 27/65-18, or Diameter: 23.1in - circumference auto-calculates, it is best to actually measure or at least use the tire vendor provided diameter</div>
         </div>
 
         <div class="field">
@@ -127,7 +127,7 @@
                 <input type="number" id="circ_rear" placeholder="mm" min="1440" max="2880" style="flex: 1;" readonly>
                 <span style="white-space: nowrap;">mm</span>
             </div>
-            <div class="hint">Street: 245/40/17 or Slick: 27/65-18 - circumference auto-calculates</div>
+            <div class="hint">Street: 245/40/17, Slick: 27/65-18, or Diameter: 24.7in - circumference auto-calculates, it is best to actually measure or at least use the tire vendor provided diameter</div>
         </div>
 
         <div class="field">
@@ -152,6 +152,14 @@
 
     <script>
         function parseTireSize(tireStr) {
+            const diameterOnlyMatch = tireStr.match(/^(\d+(?:\.\d+)?)(?:\s*in)?$/i);
+            if (diameterOnlyMatch) {
+                const diameter = parseFloat(diameterOnlyMatch[1]);
+                const totalDiameter = diameter * 25.4;
+                const circumference = Math.PI * totalDiameter;
+                return Math.round(circumference);
+            }
+            
             // Parse slick tire size like "27/65-18" (diameter/width-rim)
             const slickMatch = tireStr.match(/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)/);
             if (slickMatch) {
