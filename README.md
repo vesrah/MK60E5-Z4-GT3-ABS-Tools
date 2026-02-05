@@ -3,7 +3,12 @@ Tools and notes to help in the diagnosis and configuration of the MK60E5 out of 
 
 The part number for these units is 34516769162 with the 829.3 code on the module.  They are compatible with a VW yaw sensor with the part number 7H0907652A, note that this yaw sensor is not pinned the same as the BMW yaw sensor.
 
+## CANBUS
+These units, when flashed, allow for specifying tire circumference separately for front and rear, as well as an ABS intervention mode with 10 steps. Maximum to minimum intervention is 0, 9, 8, 7, 6, 5, 4, 3, 2, 1.  A small web page to generate the message required for your settings is located at https://vesrah.github.io/MK60E5-Z4-GT3-ABS-Tools/
+
 ## Wiring
+
+##### Z4 MK60E5
 
 | Pin | Usage | Notes |
 |-----|-------|-------|
@@ -54,3 +59,12 @@ The part number for these units is 34516769162 with the 829.3 code on the module
 | 45 | FL Wheel Speed Power |  |
 | 46 | FL Wheel Speed Signal |  |
 | 47 | Ground |  |
+
+##### VW Yaw Sensor
+
+| Pin | Usage
+|-----|-------|
+| 1 | 12v Power |
+| 2 | CAN Low |
+| 3 | Ground |
+| 4 | CAN High |
