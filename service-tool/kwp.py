@@ -18,6 +18,7 @@ they are never embedded in this file.
 import json
 import os
 import time
+from contextlib import nullcontext
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TGT = 0x29  # DSC diagnostic address
@@ -117,6 +118,67 @@ def load_seedkey(zb="6769162"):
         if name in ("ccpKey", "codingKey"):
             out[name] = int(v, 16) if isinstance(v, str) else v
     return out
+
+
+# Additional DTC names, shown when a DTC has no entry in the internal fault table.
+EXTRA_DTC = {
+    0x5DE0: "BBV FA not initialized (brake-pad thickness, front axle)",
+    0x5DE1: "BBV RA not initialized (brake-pad thickness, rear axle)",
+    0x5DE2: "critical brake-pad thickness front axle reached",
+    0x5DE3: "critical brake-pad thickness rear axle reached",
+    0x5E21: "pressure transducer 2 electrically defective or noisy",
+    0x5E50: 'SZL serial number wrong ("no fault")',
+    0x5E51: 'SZL serial number invalid ("no fault")',
+}
+
+# ---- brake bleeding --------------------------------------------------------
+# The module bleeds with $30 InputOutputControlByLocalIdentifier on local id 0x10, control
+# parameter 0x07 (short-term adjustment), one frame per actuator state:
+#     30 10 07 <valves> <aux> 01 <valves> <aux>
+# valves: two bits per wheel (FL bits 0-1, FR 2-3, RL 4-5, RR 6-7); aux: 0x10 = pump motor,
+# 0x0F = the four switching valves, 0x00 = everything off. Each side is a 104-frame sequence;
+# the default inter-frame pause is 200 ms.
+BLEED_SIDES = {"left": ("FL + RL", 0x11, 0xDD), "right": ("FR + RR", 0x44, 0x77)}
+# One-shot per-wheel form, inlet + outlet valves + pump:  30 10 07 00 00 FF <valves> 10
+WHEEL_MASK = {"FL": 0x03, "FR": 0x0C, "RL": 0x30, "RR": 0xC0}
+
+
+def bleed_sequence(side):
+    """(valves, aux) pairs of one side's bleeding sequence."""
+    if side not in BLEED_SIDES:
+        raise ValueError("bleed side must be 'left' or 'right'")
+    _, one, mixed = BLEED_SIDES[side]
+    seq = [(one, 0x00)]
+    for _ in range(10):
+        seq += [(0x55, 0x10), (mixed, 0x10), (0x55, 0x10), (0x55, 0x10), (one, 0x10), (one, 0x10)]
+    for _ in range(20):
+        seq += [(one, 0x00), (0x00, 0x00)]
+    seq += [(0x00, 0x0F), (0x00, 0x0F), (0x00, 0x00)]
+    return seq
+
+
+def bleed_frame(valves, aux):
+    return [0x30, 0x10, 0x07, valves, aux, 0x01, valves, aux]
+
+
+def actuate_frame(valves, aux):
+    return [0x30, 0x10, 0x07, 0x00, 0x00, 0xFF, valves, aux]
+
+
+def bleed_desc(valves, aux):
+    """Human-readable actuator state for one bleeding frame."""
+    wheels = []
+    for i, name in enumerate(("FL", "FR", "RL", "RR")):
+        b = (valves >> (2 * i)) & 3
+        if b:
+            wheels.append(name + (" (both)" if b == 3 else ""))
+    if aux == 0x10:
+        wheels.append("pump")
+    elif aux == 0x0F:
+        wheels.append("switching valves")
+    elif aux:
+        wheels.append(f"aux 0x{aux:02X}")
+    return ", ".join(wheels) or "all off"
 
 
 # ---- transports -------------------------------------------------------------
@@ -260,6 +322,16 @@ class MockKwp:
                 self.routine[rid] = left - 1
             done = self.routine.get(rid, 0) == 0
             return bytes([0x73, rid, 0x02 if done else 0x01])
+        if s == 0x30:  # input/output control: bleeding, valve actuation
+            if self.session == 0x81:
+                raise KwpError(0x22, NRC[0x22])
+            if len(p) != 8 or p[1] != 0x10 or p[2] != 0x07:
+                raise KwpError(0x12, NRC[0x12])
+            return bytes([0x70, 0x10, 0x07])
+        if s == 0x22:  # read data by common id: 0x3000 = coding
+            if p[1] != 0x30 or p[2] != 0x00:
+                raise KwpError(0x31, NRC[0x31])
+            return bytes([0x62, 0x30, 0x00, self.eeprom[0xFA], self.eeprom[0xFB], self.eeprom[0xFC]])
         if s == 0x21:  # live data by local id
             lid = p[1]
             return bytes([0x61, lid]) + _mock_live(lid)
@@ -435,6 +507,7 @@ class Module:
                 "status_bits": decode_status(st),
                 "faults": [f"0x{f:05X}" for f in faults],
                 "info": infos,
+                "extra": EXTRA_DTC.get(dtc) if not faults else None,
                 "lamp": dtc_lamp(infos),
             })
         return {"count": count, "dtcs": out}
@@ -466,7 +539,7 @@ class Module:
     # routines (valve + sensor calibration)
     def run_routine(self, rid, args=None):
         self.enter_session(0x87)  # routines need the adjustment session
-        payload = [0x31, rid] + list(args or [])
+        payload = [0x31, rid] + list(args if args is not None else [0x00])  # 0x00 = routine-entry option
         self.t.request(payload)
         return {"started": f"0x{rid:02X}"}
 
@@ -491,6 +564,47 @@ class Module:
         body = self.t.request([0x21, lid])
         data = body[2:] if len(body) >= 2 and body[0] == 0x61 else body
         return {"lid": f"0x{lid:02X}", "bytes": data.hex(), "len": len(data)}
+
+    # brake bleeding / actuator control ($30 10 07)
+    def bleed(self, side, pause=0.2, progress=None, cancel=None, lock=None):
+        """Run one side's bleeding sequence. progress(i, n, valves, aux) runs before each
+        frame; cancel (a threading.Event or any object with is_set()) ends the run early with
+        the all-off frame. lock, if given, is held around each K-line exchange."""
+        seq = bleed_sequence(side)
+        lock = lock if lock is not None else nullcontext()
+        with lock:
+            self.enter_session(0x87)
+        time.sleep(0.1)                      # settle after 10 87
+        for i, (valves, aux) in enumerate(seq):
+            if cancel is not None and cancel.is_set():
+                with lock:
+                    self.t.request(bleed_frame(0x00, 0x00))
+                return {"side": side, "frames": i, "total": len(seq), "stopped": True}
+            if progress:
+                progress(i, len(seq), valves, aux)
+            with lock:
+                self.t.request(bleed_frame(valves, aux))
+            if pause:
+                time.sleep(pause)
+        return {"side": side, "frames": len(seq), "total": len(seq), "stopped": False}
+
+    def actuate(self, wheel):
+        """One wheel's inlet + outlet valves with the pump (one-shot form)."""
+        if wheel not in WHEEL_MASK:
+            raise ValueError("wheel must be FL, FR, RL or RR")
+        self.enter_session(0x87)
+        self.t.request(actuate_frame(WHEEL_MASK[wheel], 0x10))
+        return {"wheel": wheel, "valves": f"0x{WHEEL_MASK[wheel]:02X}"}
+
+    def actuate_off(self):
+        self.t.request(bleed_frame(0x00, 0x00))   # everything off
+        return {"off": True}
+
+    def read_coding_id(self):
+        """Coding via $22 30 00: a cross-check for read_coding()."""
+        body = self.t.request([0x22, 0x30, 0x00])
+        data = body[3:] if len(body) >= 3 and body[0] == 0x62 else body
+        return {"bytes": bytes(data).hex(), "len": len(data)}
 
 
 def make_transport(mock=True, port=None, baud=9600):

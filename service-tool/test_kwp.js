@@ -1,11 +1,11 @@
-// KWP Module: MD5, M3 level-5 auth, and Enable CCP flow.  node service-tool/test_kwp.js
+// KWP Module: MD5, M3 level-5 auth, Enable CCP flow, routines and brake bleeding.  node service-tool/test_kwp.js
 // MD5 and auth vectors are from the RFC and from kwp.py (computed independently of this code).
 const test = require("node:test");
 const assert = require("node:assert");
 
 global.DTCMAP = {}; global.FAULTINFO = {};
 global.IDENT_LEN = {}; global.IDENT_SRC = {}; global.SW_IDENT_94 = [];
-const { md5, Module } = require("../assets/kwp.js");
+const { md5, Module, MockKwp, bleedSeq, bleedFrame, actuateFrame, WHEEL_MASK, EXTRA_DTC } = require("../assets/kwp.js");
 
 const hex = a => Array.from(a, b => b.toString(16).padStart(2, "0")).join("");
 const bytes = s => s.match(/../g).map(x => parseInt(x, 16));
@@ -111,4 +111,94 @@ test("Z4 Enable CCP is unchanged: 10 87, 0x7E, 31 31 01, no auth5", async () => 
   const r = await mod.enableCcp();
   assert.strictEqual(r.auth5, undefined);
   assert.deepStrictEqual(log.map(l => l.split(" ").slice(0, 2).join(" ")), ["16 135", "39 251", "39 252", "49 49"]);
+});
+
+// ---- routines and brake bleeding ----
+
+// Records every request and answers with a generic positive response.
+function recorder() {
+  const t = { kind: "fake", log: [] };
+  t.request = async p => { t.log.push(hex(p).match(/../g).join(" ")); return [p[0] | 0x40, ...p.slice(1)]; };
+  return t;
+}
+
+// The expected (valves, aux) pairs of each side's sequence, 104 frames.
+const BLEED_LEFT = "1100 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 5510 dd10 5510 5510 1110 1110 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 1100 0000 000f 000f 0000";
+const BLEED_RIGHT = "4400 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 5510 7710 5510 5510 4410 4410 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 4400 0000 000f 000f 0000";
+const pairs = q => q.map(([v, a]) => v.toString(16).padStart(2, "0") + a.toString(16).padStart(2, "0")).join(" ");
+
+test("routine: 10 87, then 31 <rid> 00 with the option byte", async () => {
+  const t = recorder();
+  await new Module(t, {}, "z4").routine(0x29);
+  assert.deepStrictEqual(t.log, ["10 87", "31 29 00"]);
+});
+
+test("bleeding sequences: 104 frames per side, right side mirrors the left", () => {
+  assert.strictEqual(pairs(bleedSeq("left")), BLEED_LEFT);
+  assert.strictEqual(pairs(bleedSeq("right")), BLEED_RIGHT);
+  assert.strictEqual(bleedSeq("left").length, 104);
+  assert.throws(() => bleedSeq("front"), /left or right/);
+});
+
+test("bleed: 10 87, then one 30 10 07 frame per step with the state repeated, all off last", async () => {
+  const t = recorder(), steps = [];
+  const r = await new Module(t, {}, "z4").bleed("left", { pause: 0, onStep: (i, n) => steps.push([i, n]) });
+  assert.deepStrictEqual(r, { side: "left", frames: 104, total: 104, stopped: false });
+  assert.strictEqual(t.log.length, 105);
+  assert.strictEqual(t.log[0], "10 87");
+  assert.strictEqual(t.log[1], "30 10 07 11 00 01 11 00");
+  assert.strictEqual(t.log[2], "30 10 07 55 10 01 55 10");
+  assert.strictEqual(t.log[104], "30 10 07 00 00 01 00 00");
+  for (const l of t.log.slice(1)) {
+    const b = l.split(" ");
+    assert.strictEqual(b.length, 8);
+    assert.deepStrictEqual(b.slice(0, 3), ["30", "10", "07"]);
+    assert.strictEqual(b[5], "01");
+    assert.strictEqual(b[3], b[6]);
+    assert.strictEqual(b[4], b[7]);
+  }
+  assert.strictEqual(steps.length, 104);
+  assert.deepStrictEqual(steps[0], [0, 104]);
+});
+
+test("bleed stop: ends early and sends the all-off frame", async () => {
+  const t = recorder();
+  let sent = 0;
+  const r = await new Module(t, {}, "z4").bleed("right", { pause: 0, onStep: () => sent++, stop: () => sent >= 3 });
+  assert.deepStrictEqual(r, { side: "right", frames: 3, total: 104, stopped: true });
+  assert.strictEqual(t.log.length, 5);                       // 10 87, 3 frames, all off
+  assert.strictEqual(t.log[1], "30 10 07 44 00 01 44 00");
+  assert.strictEqual(t.log[4], "30 10 07 00 00 01 00 00");
+});
+
+test("actuate: one-shot per-wheel frame with the pump; RR is 0xC0", async () => {
+  assert.deepStrictEqual(WHEEL_MASK, { FL: 0x03, FR: 0x0C, RL: 0x30, RR: 0xC0 });
+  assert.deepStrictEqual(actuateFrame(0xC0, 0x10), [0x30, 0x10, 0x07, 0x00, 0x00, 0xFF, 0xC0, 0x10]);
+  assert.deepStrictEqual(bleedFrame(0x11, 0x10), [0x30, 0x10, 0x07, 0x11, 0x10, 0x01, 0x11, 0x10]);
+  const t = recorder(), mod = new Module(t, {}, "z4");
+  await mod.actuate("RR");
+  await mod.actuateOff();
+  assert.deepStrictEqual(t.log, ["10 87", "30 10 07 00 00 ff c0 10", "30 10 07 00 00 01 00 00"]);
+  await assert.rejects(mod.actuate("LF"), /FL, FR, RL or RR/);
+});
+
+test("mock: $30 needs the adjustment session; $22 30 00 returns the coding bytes", async () => {
+  const m = new MockKwp();
+  await assert.rejects(m.request(bleedFrame(0x11, 0)), /0x22/);
+  await m.request([0x10, 0x87]);
+  assert.deepStrictEqual(await m.request(bleedFrame(0x11, 0)), [0x70, 0x10, 0x07]);
+  const mod = new Module(m, {}, "z4");
+  assert.deepStrictEqual(await mod.readCodingId(), [0xFA, 0x00, 0x00]);
+  const r = await mod.bleed("left", { pause: 0 });
+  assert.strictEqual(r.frames, 104);
+});
+
+test("DTCs with no internal decode fall back to the extra name table", async () => {
+  const m = new MockKwp();
+  m.dtcs = [[0x5D, 0xE0, 0x60], [0x5E, 0x59, 0x60]];
+  const j = await new Module(m, {}, "z4").readDtcs();
+  assert.strictEqual(j.dtcs[0].extra, EXTRA_DTC["5DE0"]);
+  assert.match(j.dtcs[0].extra, /brake-pad thickness/);
+  assert.strictEqual(j.dtcs[0].lamp, "?");
+  assert.strictEqual(j.dtcs[1].extra, null);                 // DTCMAP is empty in this test, but 5E59 has no extra name either
 });

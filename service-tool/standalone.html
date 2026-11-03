@@ -68,6 +68,7 @@
     <div class="tab active" data-t="faults">Faults</div>
     <div class="tab" data-t="coding">Coding</div>
     <div class="tab" data-t="valve">Valve cal</div>
+    <div class="tab" data-t="bleed">Bleeding</div>
     <div class="tab" data-t="sensor">Sensor cal</div>
     <div class="tab" data-t="mem">Memory / live</div>
   </div>
@@ -89,20 +90,35 @@
   <section id="coding"><div class="card">
     <h2>Vehicle coding ($23 / $3D)</h2>
     <p>EEPROM 0x0FA–0x0FC. The adjustment session and the 0x7F unlock are done for you (coding key field); effective next power-on.</p>
-    <div class="row"><button onclick="readCoding()">Read coding</button></div>
-    <div id="coding-out"></div>
+    <div class="row"><button onclick="readCoding()">Read coding</button>
+      <button onclick="readCodingId()">Read coding ($22 30 00)</button></div>
+    <div id="coding-out"></div><div id="coding-id-out"></div>
     <div class="row"><label>row</label><input id="row" value="0" style="width:4em">
       <label>field1</label><input id="field1" value="0" style="width:4em">
       <button class="danger" onclick="writeCoding()">Write coding</button></div>
     <div class="note">Checksum = (row XOR field1) + 1, computed for you.</div></div></section>
 
   <section id="valve"><div class="card">
-    <h2>Valve calibration ($31 0x28/0x29, $33)</h2>
-    <p class="warn">Actuates the valves and pump. Bench only.</p>
-    <div class="row"><button onclick="routine(0x28,'inlet learn')">Inlet-valve learn (0x28)</button>
-      <button onclick="routine(0x29,'USV learn')">USV learn (0x29)</button>
-      <button onclick="rstatus(0x28)">Inlet status</button><button onclick="rstatus(0x29)">USV status</button></div>
+    <h2>Valve calibration ($31 0x29 / 0x28, $33)</h2>
+    <p class="warn">Actuates the valves and pump. Bench only. Run the outlet-valve learn (0x29) first, then the inlet (0x28); each is sent as <code>31 xx 00</code>.</p>
+    <div class="row"><button onclick="routine(0x29,'outlet learn')">Outlet-valve learn (0x29)</button>
+      <button onclick="routine(0x28,'inlet learn')">Inlet-valve learn (0x28)</button>
+      <button onclick="rstatus(0x29)">Outlet status</button><button onclick="rstatus(0x28)">Inlet status</button></div>
     <div id="valve-out"></div></div></section>
+
+  <section id="bleed"><div class="card">
+    <h2>Brake bleeding ($30 10 07)</h2>
+    <p class="warn">Runs the bleeding sequence: 104 valve / pump frames per side, about a minute. Runs the pump and pulses the valves. Bleeder screws of that side open, reservoir topped up, pedal pressure as per the procedure.</p>
+    <div class="row"><button class="danger" onclick="bleed('left')">Bleed left side (FL + RL)</button>
+      <button class="danger" onclick="bleed('right')">Bleed right side (FR + RR)</button>
+      <button onclick="bleedStop()" disabled>Stop</button>
+      <label>pause</label><input id="bleed-pause" value="200" style="width:4em" title="ms between frames"><span class="mut">ms</span></div>
+    <div id="bleed-out"></div>
+    <p>Single wheel, one-shot (<code>30 10 07 00 00 FF &lt;valves&gt; 10</code>): inlet + outlet valves of that wheel with the pump. Unverified.</p>
+    <div class="row"><button class="danger" onclick="actuate('FL')">FL</button><button class="danger" onclick="actuate('FR')">FR</button>
+      <button class="danger" onclick="actuate('RL')">RL</button><button class="danger" onclick="actuate('RR')">RR</button>
+      <button onclick="actuateOff()">All off</button></div></div></section>
+
 
   <section id="sensor"><div class="card">
     <h2>Sensor offset calibration ($31 0x20–0x24)</h2>
@@ -495,6 +511,17 @@ const FAULTINFO = {
   "1F4000": ["wheel-pressure sensor RR: signal / plausibility bit 14", "no", "sensor dropped by Z4 pressure code"]
 };
 // ---- $1A identification blocks ----
+// Additional DTC names, shown when a DTC has no entry in the internal fault table.
+const EXTRA_DTC = {
+  "5DE0": "BBV FA not initialized (brake-pad thickness, front axle)",
+  "5DE1": "BBV RA not initialized (brake-pad thickness, rear axle)",
+  "5DE2": "critical brake-pad thickness front axle reached",
+  "5DE3": "critical brake-pad thickness rear axle reached",
+  "5E21": "pressure transducer 2 electrically defective or noisy",
+  "5E50": "SZL serial number wrong (\"no fault\")",
+  "5E51": "SZL serial number invalid (\"no fault\")",
+};
+
 const IDENT_LEN = { 0x80: 29, 0x8F: 30, 0x90: 7, 0x94: 30, 0x99: 4 };
 const IDENT_SRC = { 0x80: "EEPROM block 10 +0x1A", 0x8F: "EEPROM block 0 +0", 0x90: "EEPROM block 10 +0x37",
                     0x94: "fixed block", 0x99: "EEPROM block 10 +0x16" };
@@ -707,6 +734,15 @@ class MockKwp {
       const done = (this.rout[r] || 0) === 0;
       return [0x73, r, done ? 2 : 1];
     }
+    if (s === 0x30) {                     // input/output control: bleeding, valve actuation
+      if (this.session === 0x81) throw new KwpError(0x22);
+      if (p[1] !== 0x10 || p[2] !== 0x07 || p.length !== 8) throw new KwpError(0x12);
+      return [0x70, 0x10, 0x07];
+    }
+    if (s === 0x22) {                     // read data by common id: 0x3000 = coding
+      if (p[1] !== 0x30 || p[2] !== 0x00) throw new KwpError(0x31);
+      return [0x62, 0x30, 0x00, this.ee[0xFA], this.ee[0xFB], this.ee[0xFC]];
+    }
     if (s === 0x21) return [0x61, p[1], ...mockLive(p[1])];   // live data
     if (s === 0x3E) return [0x7E, p[1] || 0];                 // tester present
     throw new KwpError(0x11);
@@ -723,6 +759,38 @@ function mockLive(lid) {
   }
   if (lid === 0x07) return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];  // raw wheel speeds + pad
   return [0];
+}
+
+// ---- Brake bleeding ----
+// The module bleeds with $30 InputOutputControlByLocalIdentifier on local id 0x10,
+// control parameter 0x07 (short-term adjustment), one frame per actuator state:
+//   30 10 07 <valves> <aux> 01 <valves> <aux>
+// valves: two bits per wheel (FL bits 0-1, FR 2-3, RL 4-5, RR 6-7), aux: 0x10 = pump motor,
+// 0x0F = the four switching valves, 0x00 = everything off. Each side is a 104-frame sequence;
+// the default inter-frame pause is 200 ms.
+const BLEED_SIDES = {
+  left:  { label: "FL + RL", one: 0x11, mixed: 0xDD },
+  right: { label: "FR + RR", one: 0x44, mixed: 0x77 },
+};
+function bleedSeq(side) {
+  const s = BLEED_SIDES[side];
+  if (!s) throw new Error("bleed side must be left or right");
+  const q = [[s.one, 0x00]];
+  for (let i = 0; i < 10; i++) q.push([0x55, 0x10], [s.mixed, 0x10], [0x55, 0x10], [0x55, 0x10], [s.one, 0x10], [s.one, 0x10]);
+  for (let i = 0; i < 20; i++) q.push([s.one, 0x00], [0x00, 0x00]);
+  q.push([0x00, 0x0F], [0x00, 0x0F], [0x00, 0x00]);
+  return q;
+}
+const bleedFrame = (v, aux) => [0x30, 0x10, 0x07, v, aux, 0x01, v, aux];
+// One-shot per-wheel form, inlet + outlet valves + pump:
+//   30 10 07 00 00 FF <valves> 10
+const WHEEL_MASK = { FL: 0x03, FR: 0x0C, RL: 0x30, RR: 0xC0 };
+const actuateFrame = (v, aux) => [0x30, 0x10, 0x07, 0x00, 0x00, 0xFF, v, aux];
+// Human-readable actuator state for one bleeding frame.
+function bleedDesc(v, aux) {
+  const w = ["FL", "FR", "RL", "RR"].map((n, i) => { const b = (v >> (2 * i)) & 3; return b ? `${n}${b === 3 ? " (both)" : ""}` : null; }).filter(Boolean);
+  const a = aux === 0x10 ? "pump" : aux === 0x0F ? "switching valves" : aux ? `aux 0x${aux.toString(16)}` : null;
+  return [...w, a].filter(Boolean).join(", ") || "all off";
 }
 
 // ---- Module (ported) ----
@@ -813,7 +881,8 @@ class Module {
       const dtc = (b[o] << 8) | b[o + 1];
       const key = dtc.toString(16).toUpperCase().padStart(4, '0');
       const faults = DTCMAP[key] || [];
-      out.push({ dtc: key, status: b[o + 2], faults, info: faults.map(f => FAULTINFO[f] || ["(no entry)", "?", ""]), lamp: dtcLamp(faults) });
+      const extra = faults.length ? null : (EXTRA_DTC[key] || null);
+      out.push({ dtc: key, status: b[o + 2], faults, info: faults.map(f => FAULTINFO[f] || ["(no entry)", "?", ""]), extra, lamp: dtcLamp(faults) });
     }
     return { count: n, dtcs: out };
   }
@@ -843,7 +912,7 @@ class Module {
 
   async routine(rid) {
     await this.session(0x87);                 // routines need the adjustment session
-    await this.t.request([0x31, rid]);
+    await this.t.request([0x31, rid, 0x00]);  // routine-entry option byte
   }
 
   async rstatus(rid) {
@@ -867,6 +936,46 @@ class Module {
   async live(lid) {
     const b = await this.t.request([0x21, lid]);
     return (b.length >= 2 && b[0] === 0x61) ? b.slice(2) : b;
+  }
+
+  // Brake bleeding: runs one side's sequence (see bleedSeq). onStep(i, n, valves, aux) is
+  // called before each frame; stop() is polled between frames and, when it returns true, the
+  // all-off frame is sent and the run ends early. The target's own session/NRC checks still apply.
+  async bleed(side, { pause = 200, onStep, stop } = {}) {
+    const seq = bleedSeq(side);
+    await this.session(0x87);
+    await sleep(100);                              // settle after 10 87
+    for (let i = 0; i < seq.length; i++) {
+      if (stop && stop()) {
+        await this.t.request(bleedFrame(0x00, 0x00));
+        return { side, frames: i, total: seq.length, stopped: true };
+      }
+      const [v, aux] = seq[i];
+      if (onStep) onStep(i, seq.length, v, aux);
+      await this.t.request(bleedFrame(v, aux));
+      if (pause) await sleep(pause);
+    }
+    return { side, frames: seq.length, total: seq.length, stopped: false };
+  }
+
+  // One wheel's inlet + outlet valves with the pump (one-shot form).
+  async actuate(wheel) {
+    const v = WHEEL_MASK[wheel];
+    if (v === undefined) throw new Error("wheel must be FL, FR, RL or RR");
+    await this.session(0x87);
+    await this.t.request(actuateFrame(v, 0x10));
+    return { wheel, valves: v };
+  }
+
+  async actuateOff() {
+    await this.t.request(bleedFrame(0x00, 0x00));   // everything off
+  }
+
+  // Coding via $22 30 00 (readDataByCommonIdentifier 0x3000): a cross-check for the EEPROM
+  // read in readCoding().
+  async readCodingId() {
+    const b = await this.t.request([0x22, 0x30, 0x00]);
+    return Array.from((b.length >= 3 && b[0] === 0x62) ? b.slice(3) : b);
   }
 }
 
@@ -962,6 +1071,7 @@ async function readDtcs() {
             const inf = d.info[i] || [];
             return `<div><b>0x${f}</b> ${inf[0] || ''}${inf[2] ? ` <span class="mut">- ${inf[2]}</span>` : ''}</div>`;
           }).join('')
+        : d.extra ? `<div>${d.extra}</div>`
         : '<span class="mut">no decode table for this target</span>';
       h += `<tr><td>0x${d.dtc}</td><td>0x${d.status.toString(16)} ${st}</td><td class="${lc}">${lt}</td><td>${rows}</td></tr>`;
     });
@@ -1064,6 +1174,88 @@ async function rstatus(rid) {
     log(`routine 0x${rid.toString(16)} status 0x${j.st.toString(16)}`);
   } catch (e) {
     log("status: " + e.message, "bad");
+  }
+}
+
+// ---- Brake bleeding: runs the sequence frame by frame ----
+let bleedRun = null;   // { stop: bool } while a sequence is running
+
+function bleedButtons(running) {
+  document.querySelectorAll("#bleed button").forEach(b => {
+    const isStop = /bleedStop/.test(b.getAttribute("onclick") || "");
+    b.disabled = isStop ? !running : (running || !mod);
+  });
+}
+
+async function bleed(side) {
+  if (bleedRun) return;
+  const label = BLEED_SIDES[side].label, target = ($("#target") || {}).value || "z4";
+  const warn = target === "m3" ? "\n\nThis sequence has not been verified on the M3 module." : "";
+  if (!confirm(`Bleed the ${label} circuits? Runs the pump and pulses the valves for about ${Math.round(104 * (0.35 + (+$("#bleed-pause").value || 0) / 1000))} s. ` +
+               `Bleeder screws on that side open, reservoir topped up, pedal pressure as per the procedure.${warn}`)) return;
+  bleedRun = { stop: false };
+  bleedButtons(true);
+  const out = $("#bleed-out");
+  log(`bleeding ${label} on the Z4 GT3: 104 frames, pause ${+$("#bleed-pause").value || 0} ms`);
+  try {
+    const r = await mod.bleed(side, {
+      pause: +$("#bleed-pause").value || 0,
+      stop: () => bleedRun.stop,
+      onStep: (i, n, v, aux) => {
+        out.innerHTML = `<div>frame ${i + 1} / ${n}: <b>${bleedDesc(v, aux)}</b> <span class="mut">(30 10 07 ${fmt(bleedFrame(v, aux).slice(3))})</span></div>` +
+                        `<div class="mut" style="height:6px;background:var(--mut);opacity:.3;border-radius:3px;margin-top:6px"><div style="height:6px;width:${Math.round(100 * (i + 1) / n)}%;background:var(--ok);border-radius:3px;opacity:1"></div></div>`;
+      },
+    });
+    if (r.stopped) {
+      out.innerHTML = `<span class="warn">stopped after ${r.frames} of ${r.total} frames; all valves and pump off</span>`;
+      log(`bleeding ${label} stopped after ${r.frames} frames`, "warn");
+    } else {
+      out.innerHTML = `<span class="ok">${label} sequence complete (${r.total} frames)</span>`;
+      log(`bleeding ${label} complete`, "ok");
+    }
+  } catch (e) {
+    out.innerHTML = `<span class="bad">${e.message}</span>`;
+    log("bleed: " + e.message, "bad");
+    try { await mod.actuateOff(); } catch (e2) { /* the module times the override out itself */ }
+  } finally {
+    bleedRun = null;
+    bleedButtons(false);
+  }
+}
+
+function bleedStop() {
+  if (bleedRun) { bleedRun.stop = true; log("bleeding: stop requested, sending all-off", "warn"); }
+}
+
+async function actuate(wheel) {
+  if (!confirm(`Open the ${wheel} inlet + outlet valves and run the pump (one-shot)?`)) return;
+  try {
+    const r = await mod.actuate(wheel);
+    $("#bleed-out").innerHTML = `<span class="ok">${wheel} actuated (valves 0x${r.valves.toString(16)}, pump)</span>`;
+    log(`actuate ${wheel}: 30 10 07 00 00 FF ${r.valves.toString(16).padStart(2, '0')} 10`, "ok");
+  } catch (e) {
+    log("actuate: " + e.message, "bad");
+  }
+}
+
+async function actuateOff() {
+  try {
+    await mod.actuateOff();
+    $("#bleed-out").innerHTML = `<span class="ok">all valves and pump off</span>`;
+    log("actuators off (30 10 07 00 00 01 00 00)", "ok");
+  } catch (e) {
+    log("actuate off: " + e.message, "bad");
+  }
+}
+
+async function readCodingId() {
+  try {
+    const b = await mod.readCodingId();
+    const j = b.length >= 3 ? ` <span class="mut">(checksum 0x${b[0].toString(16)}, row ${b[1]}, field1 ${b[2]} if laid out like EEPROM 0x0FA)</span>` : "";
+    $("#coding-id-out").innerHTML = `<table><tr><th>$22 3000</th><th>bytes</th></tr><tr><td>${b.length} bytes</td><td>${fmt(b)}${j}</td></tr></table>`;
+    log(`$22 30 00: ${fmt(b)}`);
+  } catch (e) {
+    log("read_coding ($22): " + e.message, "bad");
   }
 }
 

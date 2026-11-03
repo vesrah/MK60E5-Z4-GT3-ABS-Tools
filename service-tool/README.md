@@ -2,8 +2,8 @@
 
 A small browser diagnostic tool for the flashed MK60E5 (ZB 6769162). It reads
 and clears faults, reads and writes coding, runs the valve- and sensor-offset
-calibration routines, and reads live data and memory - over the module's own
-KWP2000 services on K-line.
+calibration routines, bleeds the brakes, and reads live data and memory - over
+the module's own KWP2000 services on K-line.
 
 ## Two ways to run
 
@@ -39,13 +39,17 @@ service-tool/requirements.txt`).
 | Read faults | `$18 02 FF FF` -> `58 count [hi lo status]...` | none |
 | Clear faults | `$14 FF FF` | none (coding DTC returns next power-on) |
 | Read coding | `$23 00 00 FA 03 03` (EEPROM 0x0FA-0x0FC) | none |
+| Read coding (cross-check) | `$22 30 00` (readDataByCommonIdentifier 0x3000) | none |
 | Write coding | `$3D 00 00 FB 03 01 DD` x3 (row, field1, checksum) | `$10 87` + security `0x7F` |
-| Valve calibration | `$31 0x28` inlet, `$31 0x29` USV, `$33` status | session; actuates valves |
-| Sensor calibration | `$31 0x20/0x21/0x22/0x24` offsets | stationary |
+| Valve calibration | `$31 29 00` outlet-valve learn first, then `$31 28 00` inlet, `$33` status | session; actuates valves |
+| Sensor calibration | `$31 20/21/22/24 00` offsets | stationary |
+| Brake bleeding | `$30 10 07 <valves> <aux> 01 <valves> <aux>`, 104 frames per side; one-shot per wheel `$30 10 07 00 00 FF <valves> 10` | session; runs the pump, pulses the valves |
 | Live data | `$21 0x02/0x05/0x06/0x07` | none |
 | Memory read | `$23 00 HH LL 03 NN` (type 3 = EEPROM) | none |
 
 ## Faults and the ABS lamp
+
+A few DTCs (brake-pad thickness `0x5DE0`-`0x5DE3`, pressure transducer 2 `0x5E21`, SZL serial number `0x5E50`/`0x5E51`) have a name but no internal fault entry, so their ABS-lamp column is shown as unknown.
 
 A `$18` DTC is a 2-byte number that several internal fault bits can share, so
 the tool lists every candidate fault behind each DTC with its meaning. The
@@ -85,11 +89,36 @@ into the two toolbar fields in `standalone.html`, or for `server.py` put a
 
 Mock mode needs no key. The two toolbar buttons, **Unlock: Enable CCP** (`10 87`, `27 FB/FC` with the CCP key (0x7E), `31 31 01`) and **Unlock: Enable Coding Write** (`10 87`, `27 FD/FE` with the coding key (0x7F)), run their whole sequence in order; coding writes and calibration routines open the session they need themselves. The constants are read from the fields at the moment you click, so they can be typed after connecting.
 
+## Brake bleeding
+
+The **Bleeding** tab runs the module's bleeding sequence one side at a time
+(left = FL + RL, right = FR + RR). It opens the adjustment session (`10 87`),
+then sends 104 `$30` InputOutputControlByLocalIdentifier frames on local id
+`0x10`, control parameter `0x07` (short-term adjustment):
+
+```
+30 10 07 <valves> <aux> 01 <valves> <aux>
+```
+
+`valves` has two bits per wheel (FL bits 0-1, FR 2-3, RL 4-5, RR 6-7);
+`aux` is `0x10` for the pump motor, `0x0F` for the four switching valves and
+`0x00` for everything off. Each side runs about a minute at the default 200 ms
+pause between frames: a pump-on phase cycling the valves, twenty on/off pulses
+of that side's wheels, the switching valves, then all off. **Stop** sends the
+all-off frame and ends the run; the page shows the frame count and the valves
+and pump state as it goes.
+
+The same tab has a one-shot per-wheel form, `30 10 07 00 00 FF <valves> 10`
+(that wheel's inlet + outlet valves with the pump), and an **All off** button.
+The one-shot form is unverified on hardware. In the hosted page the sequence is
+also offered for the M3 target over CAN; it has not been verified on that module.
+
 ## Safety
 
-Writes and valve routines are confirmed in the UI and gated by the module's own
+Writes, valve routines and bleeding are confirmed in the UI and gated by the module's own
 session, security and stationary checks. Valve calibration actuates the valves
-and pump - bench only. Coding writes take effect at the next power-on and the
+and pump - bench only. Bleeding runs the pump and pulses the valves for about a
+minute per side; **Stop** sends the all-off frame. Coding writes take effect at the next power-on and the
 checksum is recomputed for you.
 
 ## Files
@@ -98,6 +127,8 @@ checksum is recomputed for you.
 - `server.py` - loopback HTTP + JSON bridge for the Python path.
 - `kwp.py` - the KWP service layer (serial + mock transports, key algorithms).
 - `test_pcan_usb.js` - tests for the WebUSB PCAN-USB driver in `assets/pcan_usb.js`; run `node service-tool/test_pcan_usb.js`.
+- `test_kwp.js` - tests for the KWP module in `assets/kwp.js` (MD5, M3 level-5 auth, routines, bleeding); run `node service-tool/test_kwp.js`.
+- `test_kwp.py` - the same for `kwp.py` against the mock; run `python3 service-tool/test_kwp.py`.
 - `requirements.txt` - Python dependencies for real-hardware mode; mock mode needs none.
 - `index.html` - UI served by `server.py`.
 - `dtcmap.json` - DTC -> internal-fault decode table.

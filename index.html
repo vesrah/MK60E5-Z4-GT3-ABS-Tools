@@ -39,6 +39,7 @@
     <div class="tab" data-t="faults">Faults</div>
     <div class="tab" data-t="coding">Coding</div>
     <div class="tab" data-t="valve">Valve cal</div>
+    <div class="tab" data-t="bleed">Bleeding</div>
     <div class="tab" data-t="sensor">Sensor cal</div>
     <div class="tab" data-t="mem">Memory / live</div>
   </div>
@@ -111,20 +112,34 @@
   <section id="coding"><div class="card">
     <h2>Vehicle coding ($23 / $3D)</h2>
     <p>EEPROM 0x0FA–0x0FC. The adjustment session and the 0x7F unlock are done for you (coding key field); effective next power-on.</p>
-    <div class="row"><button onclick="readCoding()">Read coding</button></div>
-    <div id="coding-out"></div>
+    <div class="row"><button onclick="readCoding()">Read coding</button>
+      <button onclick="readCodingId()">Read coding ($22 30 00)</button></div>
+    <div id="coding-out"></div><div id="coding-id-out"></div>
     <div class="row"><label>row</label><input id="row" value="0" style="width:4em">
       <label>field1</label><input id="field1" value="0" style="width:4em">
       <button class="danger" onclick="writeCoding()">Write coding</button></div>
     <div class="note">Checksum = (row XOR field1) + 1, computed for you.</div></div></section>
 
   <section id="valve"><div class="card">
-    <h2>Valve calibration ($31 0x28/0x29, $33)</h2>
-    <p class="warn">Actuates the valves and pump. Bench only.</p>
-    <div class="row"><button onclick="routine(0x28,'inlet learn')">Inlet-valve learn (0x28)</button>
-      <button onclick="routine(0x29,'USV learn')">USV learn (0x29)</button>
-      <button onclick="rstatus(0x28)">Inlet status</button><button onclick="rstatus(0x29)">USV status</button></div>
+    <h2>Valve calibration ($31 0x29 / 0x28, $33)</h2>
+    <p class="warn">Actuates the valves and pump. Bench only. Run the outlet-valve learn (0x29) first, then the inlet (0x28); each is sent as <code>31 xx 00</code>.</p>
+    <div class="row"><button onclick="routine(0x29,'outlet learn')">Outlet-valve learn (0x29)</button>
+      <button onclick="routine(0x28,'inlet learn')">Inlet-valve learn (0x28)</button>
+      <button onclick="rstatus(0x29)">Outlet status</button><button onclick="rstatus(0x28)">Inlet status</button></div>
     <div id="valve-out"></div></div></section>
+
+  <section id="bleed"><div class="card">
+    <h2>Brake bleeding ($30 10 07)</h2>
+    <p class="warn">Runs the bleeding sequence: 104 valve / pump frames per side, about a minute. Runs the pump and pulses the valves. Bleeder screws of that side open, reservoir topped up, pedal pressure as per the procedure. On the M3 the same sequence is sent over CAN; unverified on that module.</p>
+    <div class="row"><button class="danger" onclick="bleed('left')">Bleed left side (FL + RL)</button>
+      <button class="danger" onclick="bleed('right')">Bleed right side (FR + RR)</button>
+      <button onclick="bleedStop()" disabled>Stop</button>
+      <label>pause</label><input id="bleed-pause" value="200" style="width:4em" title="ms between frames"><span class="mut">ms</span></div>
+    <div id="bleed-out"></div>
+    <p>Single wheel, one-shot (<code>30 10 07 00 00 FF &lt;valves&gt; 10</code>): inlet + outlet valves of that wheel with the pump. Unverified.</p>
+    <div class="row"><button class="danger" onclick="actuate('FL')">FL</button><button class="danger" onclick="actuate('FR')">FR</button>
+      <button class="danger" onclick="actuate('RL')">RL</button><button class="danger" onclick="actuate('RR')">RR</button>
+      <button onclick="actuateOff()">All off</button></div></div></section>
 
   <section id="sensor"><div class="card">
     <h2>Sensor offset calibration ($31 0x20–0x24)</h2>

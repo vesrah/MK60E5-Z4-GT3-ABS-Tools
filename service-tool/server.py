@@ -8,8 +8,8 @@ hardware; pass --port to talk to a real K+DCAN cable.
     python3 tools/webtool/server.py                 # mock, http://127.0.0.1:8730
     python3 tools/webtool/server.py --port /dev/cu.usbserial-XXXX --baud 9600
 
-Only loopback is bound. This tool writes coding and runs valve/sensor
-routines; those are gated behind explicit confirmations in the UI and the
+Only loopback is bound. This tool writes coding, runs valve/sensor
+routines and the brake-bleeding sequence; those are gated behind explicit confirmations in the UI and the
 module's own session/security/stationary checks. The Dump tab reads flash and
 RAM over CCP on a CAN adapter through python-can (see ccp.py).
 """
@@ -98,6 +98,45 @@ def _dump_cancel():
     return _dump["status"]
 
 
+_bleed = {"thread": None, "cancel": None, "status": {"state": "idle"}}
+
+
+def _bleed_start(mod, body):
+    """Run a bleeding sequence in the background; poll bleed_status, bleed_cancel stops it."""
+    if _bleed["thread"] is not None and _bleed["thread"].is_alive():
+        raise RuntimeError("a bleeding run is already in progress")
+    side = body.get("side", "left")
+    pause = float(body.get("pause", 0.2))
+    total = len(kwp.bleed_sequence(side))
+    cancel = threading.Event()
+    status = {"state": "running", "side": side, "frame": 0, "total": total, "desc": "", "valves": 0, "aux": 0}
+
+    def progress(i, n, valves, aux):
+        status.update(frame=i + 1, total=n, valves=valves, aux=aux, desc=kwp.bleed_desc(valves, aux))
+
+    def run():
+        try:
+            r = mod.bleed(side, pause=pause, progress=progress, cancel=cancel, lock=_lock)
+            status.update(state="stopped" if r["stopped"] else "done", frame=r["frames"])
+        except Exception as e:  # noqa - surfaced through bleed_status
+            status.update(state="error", detail=str(e))
+            try:
+                with _lock:
+                    mod.actuate_off()
+            except Exception:
+                pass
+
+    _bleed.update(status=status, cancel=cancel, thread=threading.Thread(target=run, daemon=True))
+    _bleed["thread"].start()
+    return status
+
+
+def _bleed_cancel():
+    if _bleed["cancel"] is not None:
+        _bleed["cancel"].set()
+    return _bleed["status"]
+
+
 def _dispatch(action, body):
     if action == "connect":
         return _connect(body)
@@ -105,6 +144,10 @@ def _dispatch(action, body):
         return _dump["status"]
     if action == "dump_cancel":
         return _dump_cancel()
+    if action == "bleed_status":
+        return _bleed["status"]
+    if action == "bleed_cancel":
+        return _bleed_cancel()
 
     mod = _state.get("module")
     if mod is None:
@@ -120,12 +163,16 @@ def _dispatch(action, body):
         "read_dtcs":      mod.read_dtcs,
         "clear_dtcs":     mod.clear_dtcs,
         "read_coding":    mod.read_coding,
+        "read_coding_id": mod.read_coding_id,
         "write_coding":   lambda: mod.write_coding(int(body["row"]), int(body.get("field1", 0))),
         "run_routine":    lambda: mod.run_routine(_hexint(body["rid"]), body.get("args")),
         "routine_status": lambda: mod.routine_status(_hexint(body["rid"])),
         "read_memory":    lambda: mod.read_memory(_hexint(body["addr"]), int(body["length"]),
                                                   int(body.get("mtype", 3))),
         "read_live":      lambda: mod.read_live(_hexint(body["lid"])),
+        "bleed_start":    lambda: _bleed_start(mod, body),
+        "actuate":        lambda: mod.actuate(body["wheel"]),
+        "actuate_off":    mod.actuate_off,
         "dump_start":     lambda: _dump_start(mod, body),
     }
 

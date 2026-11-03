@@ -364,6 +364,17 @@ const FAULTINFO = {
   "1F4000": ["wheel-pressure sensor RR: signal / plausibility bit 14", "no", "sensor dropped by Z4 pressure code"]
 };
 // ---- $1A identification blocks ----
+// Additional DTC names, shown when a DTC has no entry in the internal fault table.
+const EXTRA_DTC = {
+  "5DE0": "BBV FA not initialized (brake-pad thickness, front axle)",
+  "5DE1": "BBV RA not initialized (brake-pad thickness, rear axle)",
+  "5DE2": "critical brake-pad thickness front axle reached",
+  "5DE3": "critical brake-pad thickness rear axle reached",
+  "5E21": "pressure transducer 2 electrically defective or noisy",
+  "5E50": "SZL serial number wrong (\"no fault\")",
+  "5E51": "SZL serial number invalid (\"no fault\")",
+};
+
 const IDENT_LEN = { 0x80: 29, 0x8F: 30, 0x90: 7, 0x94: 30, 0x99: 4 };
 const IDENT_SRC = { 0x80: "EEPROM block 10 +0x1A", 0x8F: "EEPROM block 0 +0", 0x90: "EEPROM block 10 +0x37",
                     0x94: "fixed block", 0x99: "EEPROM block 10 +0x16" };
@@ -644,6 +655,15 @@ class MockKwp {
       const done = (this.rout[r] || 0) === 0;
       return [0x73, r, done ? 2 : 1];
     }
+    if (s === 0x30) {                     // input/output control: bleeding, valve actuation
+      if (this.session === 0x81) throw new KwpError(0x22);
+      if (p[1] !== 0x10 || p[2] !== 0x07 || p.length !== 8) throw new KwpError(0x12);
+      return [0x70, 0x10, 0x07];
+    }
+    if (s === 0x22) {                     // read data by common id: 0x3000 = coding
+      if (p[1] !== 0x30 || p[2] !== 0x00) throw new KwpError(0x31);
+      return [0x62, 0x30, 0x00, this.ee[0xFA], this.ee[0xFB], this.ee[0xFC]];
+    }
     if (s === 0x21) return [0x61, p[1], ...mockLive(p[1])];   // live data
     if (s === 0x3E) return [0x7E, p[1] || 0];                 // tester present
     throw new KwpError(0x11);
@@ -660,6 +680,38 @@ function mockLive(lid) {
   }
   if (lid === 0x07) return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];  // raw wheel speeds + pad
   return [0];
+}
+
+// ---- Brake bleeding ----
+// The module bleeds with $30 InputOutputControlByLocalIdentifier on local id 0x10,
+// control parameter 0x07 (short-term adjustment), one frame per actuator state:
+//   30 10 07 <valves> <aux> 01 <valves> <aux>
+// valves: two bits per wheel (FL bits 0-1, FR 2-3, RL 4-5, RR 6-7), aux: 0x10 = pump motor,
+// 0x0F = the four switching valves, 0x00 = everything off. Each side is a 104-frame sequence;
+// the default inter-frame pause is 200 ms.
+const BLEED_SIDES = {
+  left:  { label: "FL + RL", one: 0x11, mixed: 0xDD },
+  right: { label: "FR + RR", one: 0x44, mixed: 0x77 },
+};
+function bleedSeq(side) {
+  const s = BLEED_SIDES[side];
+  if (!s) throw new Error("bleed side must be left or right");
+  const q = [[s.one, 0x00]];
+  for (let i = 0; i < 10; i++) q.push([0x55, 0x10], [s.mixed, 0x10], [0x55, 0x10], [0x55, 0x10], [s.one, 0x10], [s.one, 0x10]);
+  for (let i = 0; i < 20; i++) q.push([s.one, 0x00], [0x00, 0x00]);
+  q.push([0x00, 0x0F], [0x00, 0x0F], [0x00, 0x00]);
+  return q;
+}
+const bleedFrame = (v, aux) => [0x30, 0x10, 0x07, v, aux, 0x01, v, aux];
+// One-shot per-wheel form, inlet + outlet valves + pump:
+//   30 10 07 00 00 FF <valves> 10
+const WHEEL_MASK = { FL: 0x03, FR: 0x0C, RL: 0x30, RR: 0xC0 };
+const actuateFrame = (v, aux) => [0x30, 0x10, 0x07, 0x00, 0x00, 0xFF, v, aux];
+// Human-readable actuator state for one bleeding frame.
+function bleedDesc(v, aux) {
+  const w = ["FL", "FR", "RL", "RR"].map((n, i) => { const b = (v >> (2 * i)) & 3; return b ? `${n}${b === 3 ? " (both)" : ""}` : null; }).filter(Boolean);
+  const a = aux === 0x10 ? "pump" : aux === 0x0F ? "switching valves" : aux ? `aux 0x${aux.toString(16)}` : null;
+  return [...w, a].filter(Boolean).join(", ") || "all off";
 }
 
 // ---- Module (ported) ----
@@ -785,7 +837,8 @@ class Module {
       // DTCMAP is the Z4 GT3 fault table; the M3 has its own, so show raw codes there
       const faults = this.target === "z4" ? (DTCMAP[key] || []) : [];
       const info = this.target === "z4" ? faults.map(f => FAULTINFO[f] || ["(no entry)", "?", ""]) : [];
-      out.push({ dtc: key, status: b[o + 2], faults, info, lamp: this.target === "z4" ? dtcLamp(faults) : "?" });
+      const extra = (this.target === "z4" && !faults.length) ? (EXTRA_DTC[key] || null) : null;
+      out.push({ dtc: key, status: b[o + 2], faults, info, extra, lamp: this.target === "z4" ? dtcLamp(faults) : "?" });
     }
     return { count: n, dtcs: out };
   }
@@ -815,7 +868,7 @@ class Module {
 
   async routine(rid) {
     await this.session(0x87);                 // routines need the adjustment session
-    await this.t.request([0x31, rid]);
+    await this.t.request([0x31, rid, 0x00]);  // routine-entry option byte
   }
 
   async rstatus(rid) {
@@ -840,7 +893,47 @@ class Module {
     const b = await this.t.request([0x21, lid]);
     return (b.length >= 2 && b[0] === 0x61) ? b.slice(2) : b;
   }
+
+  // Brake bleeding: runs one side's sequence (see bleedSeq). onStep(i, n, valves, aux) is
+  // called before each frame; stop() is polled between frames and, when it returns true, the
+  // all-off frame is sent and the run ends early. The target's own session/NRC checks still apply.
+  async bleed(side, { pause = 200, onStep, stop } = {}) {
+    const seq = bleedSeq(side);
+    await this.session(0x87);
+    await sleep(100);                              // settle after 10 87
+    for (let i = 0; i < seq.length; i++) {
+      if (stop && stop()) {
+        await this.t.request(bleedFrame(0x00, 0x00));
+        return { side, frames: i, total: seq.length, stopped: true };
+      }
+      const [v, aux] = seq[i];
+      if (onStep) onStep(i, seq.length, v, aux);
+      await this.t.request(bleedFrame(v, aux));
+      if (pause) await sleep(pause);
+    }
+    return { side, frames: seq.length, total: seq.length, stopped: false };
+  }
+
+  // One wheel's inlet + outlet valves with the pump (one-shot form).
+  async actuate(wheel) {
+    const v = WHEEL_MASK[wheel];
+    if (v === undefined) throw new Error("wheel must be FL, FR, RL or RR");
+    await this.session(0x87);
+    await this.t.request(actuateFrame(v, 0x10));
+    return { wheel, valves: v };
+  }
+
+  async actuateOff() {
+    await this.t.request(bleedFrame(0x00, 0x00));   // everything off
+  }
+
+  // Coding via $22 30 00 (readDataByCommonIdentifier 0x3000): a cross-check for the EEPROM
+  // read in readCoding().
+  async readCodingId() {
+    const b = await this.t.request([0x22, 0x30, 0x00]);
+    return Array.from((b.length >= 3 && b[0] === 0x62) ? b.slice(3) : b);
+  }
 }
 
 
-if (typeof module !== "undefined") module.exports = { md5, Module, MockKwp, ktCcpKey, ktCodingKey, ktSeedrev };
+if (typeof module !== "undefined") module.exports = { md5, Module, MockKwp, ktCcpKey, ktCodingKey, ktSeedrev, bleedSeq, bleedFrame, actuateFrame, bleedDesc, WHEEL_MASK, EXTRA_DTC };

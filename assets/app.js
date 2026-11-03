@@ -44,7 +44,7 @@ if ($("#target")) {
 // Every action button except Connect is disabled until a connection is made,
 // so clicking one before connecting simply does nothing.
 const actionButtons = Array.from(document.querySelectorAll("button"))
-  .filter(b => !/connect\(\)|pcan/.test(b.getAttribute("onclick") || ""));   // the CAN test needs no K-line
+  .filter(b => !/connect\(\)|pcan|bleedStop/.test(b.getAttribute("onclick") || ""));   // the CAN test needs no K-line; Stop is enabled only while bleeding
 function setConnected(on) {
   actionButtons.forEach(b => { b.disabled = !on; });
 }
@@ -178,6 +178,7 @@ async function readDtcs() {
             const inf = d.info[i] || [];
             return `<div><b>0x${f}</b> ${inf[0] || ''}${inf[2] ? ` <span class="mut">- ${inf[2]}</span>` : ''}</div>`;
           }).join('')
+        : d.extra ? `<div>${d.extra}</div>`
         : '<span class="mut">no decode table for this target</span>';
       h += `<tr><td>0x${d.dtc}</td><td>0x${d.status.toString(16)} ${st}</td><td class="${lc}">${lt}</td><td>${rows}</td></tr>`;
     });
@@ -305,6 +306,88 @@ async function readMem() {
     log(`$23 read ${b.length} bytes`);
   } catch (e) {
     log("read_mem: " + e.message, "bad");
+  }
+}
+
+// ---- Brake bleeding: runs the sequence frame by frame ----
+let bleedRun = null;   // { stop: bool } while a sequence is running
+
+function bleedButtons(running) {
+  document.querySelectorAll("#bleed button").forEach(b => {
+    const isStop = /bleedStop/.test(b.getAttribute("onclick") || "");
+    b.disabled = isStop ? !running : (running || !mod);
+  });
+}
+
+async function bleed(side) {
+  if (bleedRun) return;
+  const label = BLEED_SIDES[side].label, target = ($("#target") || {}).value || "z4";
+  const warn = target === "m3" ? "\n\nThis sequence has not been verified on the M3 module." : "";
+  if (!confirm(`Bleed the ${label} circuits? Runs the pump and pulses the valves for about ${Math.round(104 * (0.35 + (+$("#bleed-pause").value || 0) / 1000))} s. ` +
+               `Bleeder screws on that side open, reservoir topped up, pedal pressure as per the procedure.${warn}`)) return;
+  bleedRun = { stop: false };
+  bleedButtons(true);
+  const out = $("#bleed-out");
+  log(`bleeding ${label} on the ${TARGETS[target].label}: 104 frames, pause ${+$("#bleed-pause").value || 0} ms`);
+  try {
+    const r = await mod.bleed(side, {
+      pause: +$("#bleed-pause").value || 0,
+      stop: () => bleedRun.stop,
+      onStep: (i, n, v, aux) => {
+        out.innerHTML = `<div>frame ${i + 1} / ${n}: <b>${bleedDesc(v, aux)}</b> <span class="mut">(30 10 07 ${fmt(bleedFrame(v, aux).slice(3))})</span></div>` +
+                        `<div class="mut" style="height:6px;background:var(--mut);opacity:.3;border-radius:3px;margin-top:6px"><div style="height:6px;width:${Math.round(100 * (i + 1) / n)}%;background:var(--ok);border-radius:3px;opacity:1"></div></div>`;
+      },
+    });
+    if (r.stopped) {
+      out.innerHTML = `<span class="warn">stopped after ${r.frames} of ${r.total} frames; all valves and pump off</span>`;
+      log(`bleeding ${label} stopped after ${r.frames} frames`, "warn");
+    } else {
+      out.innerHTML = `<span class="ok">${label} sequence complete (${r.total} frames)</span>`;
+      log(`bleeding ${label} complete`, "ok");
+    }
+  } catch (e) {
+    out.innerHTML = `<span class="bad">${e.message}</span>`;
+    log("bleed: " + e.message, "bad");
+    try { await mod.actuateOff(); } catch (e2) { /* the module times the override out itself */ }
+  } finally {
+    bleedRun = null;
+    bleedButtons(false);
+  }
+}
+
+function bleedStop() {
+  if (bleedRun) { bleedRun.stop = true; log("bleeding: stop requested, sending all-off", "warn"); }
+}
+
+async function actuate(wheel) {
+  if (!confirm(`Open the ${wheel} inlet + outlet valves and run the pump (one-shot)?`)) return;
+  try {
+    const r = await mod.actuate(wheel);
+    $("#bleed-out").innerHTML = `<span class="ok">${wheel} actuated (valves 0x${r.valves.toString(16)}, pump)</span>`;
+    log(`actuate ${wheel}: 30 10 07 00 00 FF ${r.valves.toString(16).padStart(2, '0')} 10`, "ok");
+  } catch (e) {
+    log("actuate: " + e.message, "bad");
+  }
+}
+
+async function actuateOff() {
+  try {
+    await mod.actuateOff();
+    $("#bleed-out").innerHTML = `<span class="ok">all valves and pump off</span>`;
+    log("actuators off (30 10 07 00 00 01 00 00)", "ok");
+  } catch (e) {
+    log("actuate off: " + e.message, "bad");
+  }
+}
+
+async function readCodingId() {
+  try {
+    const b = await mod.readCodingId();
+    const j = b.length >= 3 ? ` <span class="mut">(checksum 0x${b[0].toString(16)}, row ${b[1]}, field1 ${b[2]} if laid out like EEPROM 0x0FA)</span>` : "";
+    $("#coding-id-out").innerHTML = `<table><tr><th>$22 3000</th><th>bytes</th></tr><tr><td>${b.length} bytes</td><td>${fmt(b)}${j}</td></tr></table>`;
+    log(`$22 30 00: ${fmt(b)}`);
+  } catch (e) {
+    log("read_coding ($22): " + e.message, "bad");
   }
 }
 

@@ -67,6 +67,7 @@
     <div class="tab active" data-t="faults">Faults</div>
     <div class="tab" data-t="coding">Coding</div>
     <div class="tab" data-t="valve">Valve cal</div>
+    <div class="tab" data-t="bleed">Bleeding</div>
     <div class="tab" data-t="sensor">Sensor cal</div>
     <div class="tab" data-t="mem">Memory / live</div>
   </div>
@@ -95,8 +96,9 @@
     <div class="card">
       <h2>Vehicle coding ($23 read / $3D write)</h2>
       <p>2 bytes + checksum at EEPROM 0x0FA–0x0FC. The adjustment session and the 0x7F unlock are done for you (seedkey.json); takes effect at the next power-on.</p>
-      <div class="row"><button onclick="readCoding()">Read coding</button></div>
-      <div id="coding-out"></div>
+      <div class="row"><button onclick="readCoding()">Read coding</button>
+        <button onclick="readCodingId()">Read coding ($22 30 00)</button></div>
+      <div id="coding-out"></div><div id="coding-id-out"></div>
       <div class="row"><label>row</label><input id="row" value="0" style="width:4em">
         <label>field1</label><input id="field1" value="0" style="width:4em">
         <button class="danger" onclick="writeCoding()">Write coding</button></div>
@@ -106,15 +108,35 @@
 
   <section id="valve">
     <div class="card">
-      <h2>Hydraulic valve calibration ($31 0x28 / 0x29, $33 status)</h2>
-      <p class="warn">These routines actuate the valves and pump. Run only on a bench with the unit safe to pulse. Refused if a test is already active or the selector is not accepted.</p>
+      <h2>Hydraulic valve calibration ($31 0x29 / 0x28, $33 status)</h2>
+      <p class="warn">These routines actuate the valves and pump. Run only on a bench with the unit safe to pulse. Refused if a test is already active or the selector is not accepted. Run the outlet-valve learn (0x29) first, then the inlet (0x28); each is sent as <code>31 xx 00</code>.</p>
       <div class="row">
+        <button onclick="routine(0x29,'outlet-valve learn')">Outlet-valve learn (0x29)</button>
         <button onclick="routine(0x28,'inlet-valve learn')">Inlet-valve learn (0x28)</button>
-        <button onclick="routine(0x29,'USV learn')">USV learn (0x29)</button>
+        <button onclick="rstatus(0x29)">Outlet status</button>
         <button onclick="rstatus(0x28)">Inlet status</button>
-        <button onclick="rstatus(0x29)">USV status</button>
       </div>
       <div id="valve-out"></div>
+    </div>
+  </section>
+
+  <section id="bleed">
+    <div class="card">
+      <h2>Brake bleeding ($30 10 07)</h2>
+      <p class="warn">Runs the bleeding sequence: 104 valve / pump frames per side, about a minute. Runs the pump and pulses the valves. Bleeder screws of that side open, reservoir topped up, pedal pressure as per the procedure.</p>
+      <div class="row">
+        <button class="danger" onclick="bleed('left')">Bleed left side (FL + RL)</button>
+        <button class="danger" onclick="bleed('right')">Bleed right side (FR + RR)</button>
+        <button id="bleed-stop" onclick="bleedStop()" disabled>Stop</button>
+        <label>pause</label><input id="bleed-pause" value="200" style="width:4em" title="ms between frames"> ms
+      </div>
+      <div id="bleed-out"></div>
+      <p>Single wheel, one-shot (<code>30 10 07 00 00 FF &lt;valves&gt; 10</code>): inlet + outlet valves of that wheel with the pump. Unverified.</p>
+      <div class="row">
+        <button class="danger" onclick="actuate('FL')">FL</button><button class="danger" onclick="actuate('FR')">FR</button>
+        <button class="danger" onclick="actuate('RL')">RL</button><button class="danger" onclick="actuate('RR')">RR</button>
+        <button onclick="actuateOff()">All off</button>
+      </div>
     </div>
   </section>
 
@@ -268,6 +290,7 @@ async function readDtcs() {
           const inf = d.info[i] || {};
           return `<div><b>${f}</b> ${inf.d || ''}${inf.eff ? ` <span style="color:var(--mut)">- ${inf.eff}</span>` : ''}</div>`;
         }).join('')
+      : d.extra ? `<div>${d.extra}</div>`
       : '<span style="color:var(--mut)">no decode</span>';
     h += `<tr><td>${d.dtc}</td><td>${d.status} ${d.status_bits.join(" ")}</td><td class="${lc}">${lt}</td><td>${rows}</td></tr>`;
   });
@@ -319,6 +342,82 @@ async function rstatus(rid) {
     const state = j.done ? 'done' : j.running ? 'running' : 'idle';
     el.innerHTML = `routine ${j.routine}: <span class="${j.done ? 'ok' : 'warn'}">${j.status} ${state}</span>`;
     log(`routine ${j.routine} status ${j.status}`);
+  } catch (e) { /* logged by api() */ }
+}
+
+
+// ---- brake bleeding: the server runs the sequence in the background; we poll its status ----
+let bleedTimer = null;
+const BLEED_LABEL = { left: "FL + RL", right: "FR + RR" };
+
+function bleedRender(s) {
+  const out = $("#bleed-out");
+  if (s.state === "running") {
+    out.innerHTML = `<div>frame ${s.frame} / ${s.total}: <b>${s.desc}</b></div>` +
+      `<div style="height:6px;background:var(--mut);opacity:.3;border-radius:3px;margin-top:6px"><div style="height:6px;width:${Math.round(100 * s.frame / s.total)}%;background:var(--ok);border-radius:3px"></div></div>`;
+  } else if (s.state === "done") {
+    out.innerHTML = `<span class="ok">${BLEED_LABEL[s.side]} sequence complete (${s.total} frames)</span>`;
+  } else if (s.state === "stopped") {
+    out.innerHTML = `<span class="warn">stopped after ${s.frame} of ${s.total} frames; all valves and pump off</span>`;
+  } else if (s.state === "error") {
+    out.innerHTML = `<span class="bad">${s.detail}</span>`;
+  }
+}
+
+async function bleedPoll() {
+  try {
+    const s = await api("bleed_status");
+    bleedRender(s);
+    if (s.state !== "running") {
+      clearInterval(bleedTimer); bleedTimer = null;
+      $("#bleed-stop").disabled = true;
+      log(`bleeding ${s.side}: ${s.state}${s.detail ? " - " + s.detail : ""}`, s.state === "done" ? "ok" : s.state === "error" ? "bad" : "warn");
+    }
+  } catch (e) { /* logged by api() */ }
+}
+
+async function bleed(side) {
+  const pause = +$("#bleed-pause").value || 0;
+  if (!confirm(`Bleed the ${BLEED_LABEL[side]} circuits? Runs the pump and pulses the valves for about ${Math.round(104 * (0.35 + pause / 1000))} s. ` +
+               `Bleeder screws on that side open, reservoir topped up, pedal pressure as per the procedure.`)) return;
+  try {
+    const s = await api("bleed_start", { side, pause: pause / 1000 });
+    log(`bleeding ${BLEED_LABEL[side]}: ${s.total} frames, pause ${pause} ms`);
+    $("#bleed-stop").disabled = false;
+    bleedRender(s);
+    if (!bleedTimer) bleedTimer = setInterval(bleedPoll, 300);
+  } catch (e) { /* logged by api() */ }
+}
+
+async function bleedStop() {
+  try {
+    await api("bleed_cancel");
+    log("bleeding: stop requested, sending all-off", "warn");
+  } catch (e) { /* logged by api() */ }
+}
+
+async function actuate(wheel) {
+  if (!confirm(`Open the ${wheel} inlet + outlet valves and run the pump (one-shot)?`)) return;
+  try {
+    const j = await api("actuate", { wheel });
+    $("#bleed-out").innerHTML = `<span class="ok">${wheel} actuated (valves ${j.valves}, pump)</span>`;
+    log(`actuate ${wheel}: 30 10 07 00 00 FF ${j.valves.slice(2)} 10`, "ok");
+  } catch (e) { /* logged by api() */ }
+}
+
+async function actuateOff() {
+  try {
+    await api("actuate_off");
+    $("#bleed-out").innerHTML = `<span class="ok">all valves and pump off</span>`;
+    log("actuators off (30 10 07 00 00 01 00 00)", "ok");
+  } catch (e) { /* logged by api() */ }
+}
+
+async function readCodingId() {
+  try {
+    const j = await api("read_coding_id");
+    $("#coding-id-out").innerHTML = `<table><tr><th>$22 3000</th><th>bytes</th></tr><tr><td>${j.len} bytes</td><td>${fmt(j.bytes)}</td></tr></table>`;
+    log(`$22 30 00: ${fmt(j.bytes)}`);
   } catch (e) { /* logged by api() */ }
 }
 

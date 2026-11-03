@@ -326,6 +326,16 @@ test("M3 CAN: a request too long for one frame uses first + consecutive frames",
   await t.close();
 });
 
+test("M3 CAN: an 8-byte bleeding frame goes out as first + consecutive frame", async () => {
+  const { t, log } = await kwpOn(p => [[0x70, p[1], p[2]]]);
+  const body = await t.request([0x30, 0x10, 0x07, 0x11, 0x00, 0x01, 0x11, 0x00]);
+  assert.deepStrictEqual(body, [0x70, 0x10, 0x07]);
+  assert.deepStrictEqual(log.rx[0], [0x30, 0x10, 0x07, 0x11, 0x00, 0x01, 0x11, 0x00]);
+  assert.strictEqual(hex(log.raw[0]), "29 10 08 30 10 07 11 00");
+  assert.strictEqual(hex(log.raw[1]), "29 21 01 11 00 00 00 00");
+  await t.close();
+});
+
 test("M3 CAN: negative responses throw KwpError with the NRC", async () => {
   const { t } = await kwpOn(p => [[0x7F, p[0], 0x33]]);
   await assert.rejects(t.request([0x31, 0x31, 0x01]), e => e instanceof KwpError && e.nrc === 0x33);
