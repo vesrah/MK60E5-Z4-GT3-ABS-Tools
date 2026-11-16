@@ -7,7 +7,7 @@ The part number for these units is 34516769162 with the 829.3 code on the module
 These units, when flashed, read tire circumference (front and rear separately), a traction-control threshold and mode, an ABS intervention level, and a gear-shift flag - all from a single CAN message, ID `0x5BA`. The hosted page at https://vesrah.github.io/MK60E5-Z4-GT3-ABS-Tools/ generates that message for your settings and also includes the diagnostic service tool (see below).
 
 ### ABS intervention level (`0x5BA` byte 7)
-The firmware handles the level linearly. A higher level makes ABS intervene earlier (on a smaller wheel deceleration); **level 0 is the most permissive** (ABS waits the longest). This is *not* the 0-9-8-…-1 order some documentation lists. The level sets the base wheel-deceleration threshold, which sits on top of a base calibration already roughly 0.25–0.45 g more permissive than the road car (1.25g).
+A higher level makes ABS intervene earlier (on a smaller wheel deceleration); **level 0 is the most permissive** (ABS waits the longest). This is *not* the 0-9-8-…-1 order some documentation lists. With this calibration only levels 0 to 4 differ; levels 4 to 9 behave the same. The level sets the base wheel-deceleration threshold, which sits on top of a base calibration already more permissive than the road car's.
 
 ### Tire circumference (`0x5BA` bytes 3–6)
 Front and rear circumference in mm (low byte first within each pair). The module accepts a new pair only when both values are 1500–3000 and the car is essentially stopped (reference speed < 4 km/h), so a size change takes effect at a standstill. Until the first accepted pair it uses the built-in defaults.

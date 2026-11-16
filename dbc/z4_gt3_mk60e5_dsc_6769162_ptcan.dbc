@@ -241,9 +241,9 @@ CM_ SG_ 1312 Value14_Mode2 "14-bit value and 2-bit mode, stored without a direct
 CM_ SG_ 1312 Odometer "Odometer; stored /10 as the mileage of each DTC record.";
 CM_ SG_ 1466 TCS_ThresholdFactor "TCS slip threshold factor; used clamped to 30..250 %.";
 CM_ SG_ 1466 TCS_Mode "TCS mode; other values are flagged invalid. Feeds the DSC mode request.";
-CM_ SG_ 1466 TyreCirc_Front "Front tyre circumference; accepted only 1440..2880 mm and near standstill, otherwise the built-in default is used.";
+CM_ SG_ 1466 TyreCirc_Front "Front tyre circumference; a pair is accepted only when both values are 1500..3000 mm and the car is near standstill (reference speed below 4 km/h), otherwise the built-in default is used.";
 CM_ SG_ 1466 TyreCirc_Rear "Rear tyre circumference; as front.";
-CM_ SG_ 1466 ABS_Level "ABS level 0..9 (0 = max, 9..1 decreasing): levels 1..9 raise the wheel-deceleration dump threshold base by 0.05 g per step, saturating at level 4 with this calibration.";
+CM_ SG_ 1466 ABS_Level "ABS level 0..9. A higher level makes ABS intervene earlier: level 0 is the most permissive, each level up to 4 lowers the wheel deceleration at which ABS starts to dump, and levels 4..9 behave the same with this calibration. 10 and above act as level 0.";
 CM_ SG_ 1466 GearShift "Gear shift in progress: each 0 -> non-zero edge suppresses rear ABS entry for about 150 ms.";
 CM_ SG_ 1490 Mode "When 2, Key is compared with the stored key (identification handshake).";
 CM_ SG_ 1490 Key "32-bit key; compared with the stored key, stored when it differs.";
@@ -283,5 +283,5 @@ VAL_ 640 EngineTrq3 255 "Invalid" ;
 VAL_ 1088 GearCode 15 "Invalid" ;
 VAL_ 1312 Odometer 1048575 "Invalid" ;
 VAL_ 1466 TCS_Mode 0 "Off" 1 "HighBase" 2 "LowBase" ;
-VAL_ 1466 ABS_Level 0 "Max" 1 "Min" 255 "Timeout" ;
+VAL_ 1466 ABS_Level 0 "MostPermissive" 4 "EarliestABS" 255 "Timeout" ;
 VAL_ 1466 GearShift 0 "None" 1 "Up" 2 "Down" ;
