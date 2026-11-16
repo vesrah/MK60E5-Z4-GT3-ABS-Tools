@@ -1,0 +1,218 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DSC DME EGS KOMBI LWS
+
+BO_ 339 ASC1_Status_Torque_Speed: 8 DSC
+ SG_ AscTorqueReductionRequest : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MsrTorqueRaiseRequest : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ AscPassive : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ AscShiftInfluence : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BrakeLightSwitch : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Lamp_BrakeAssistOff : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Lamp_TotalOff : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Lamp_Abs : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Lamp_Dsc : 8|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ RegulationActive : 9|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VehicleSpeedInvalid : 10|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ VehicleSpeed : 11|13@1+ (0.0625,0) [0|511.9375] "km/h" Vector__XXX
+ SG_ TorqueRequest_ASC : 24|8@1+ (0.390625,0) [0|99.609375] "%" Vector__XXX
+ SG_ TorqueRequest_MSR : 32|8@1+ (0.390625,0) [0|99.609375] "%" Vector__XXX
+ SG_ CanLevelMarker : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ TorqueRequest_ASC_Slow : 48|8@1+ (0.390625,0) [0|99.609375] "%" Vector__XXX
+ SG_ DscReducedMode : 57|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ DscAscDisabledLatched : 58|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ RpaLampState : 60|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Reversing : 62|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ BrakeFluidOk : 63|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 496 ASC2_WheelSpeeds: 8 DSC
+ SG_ WheelSpeed_FL : 0|13@1+ (0.0625,0) [0|511.9375] "km/h" Vector__XXX
+ SG_ WheelTolMux : 13|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ WheelTolLearned : 15|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ WheelSpeed_FR : 16|13@1+ (0.0625,0) [0|511.9375] "km/h" Vector__XXX
+ SG_ WheelTolValue_b0 : 30|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ WheelSpeed_RL : 32|13@1+ (0.0625,0) [0|511.9375] "km/h" Vector__XXX
+ SG_ WheelTolValue_b2 : 45|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ WheelSpeed_RR : 48|13@1+ (0.0625,0) [0|511.9375] "km/h" Vector__XXX
+ SG_ WheelTolValue_b5 : 61|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ WheelTolPresent : 63|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 499 ASC3_Yaw_Accel: 8 DSC
+ SG_ YawRateState : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ YawRateMagnitude : 6|9@1+ (0.1222267,0) [0|62.4578437] "deg/s" Vector__XXX
+ SG_ YawRateSign : 15|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LongitudinalAccel : 24|10@1+ (0.031327,-16.008097) [-16.008097|16.039424] "m/s2" Vector__XXX
+ SG_ AycActive : 34|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ LateralAccel : 38|10@1+ (0.0048937,-2.50557) [-2.50557|2.5006851] "g" Vector__XXX
+ SG_ DscFailedLatched : 56|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ StandstillValid : 59|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 790 DME1_Engine: 8 DME
+ SG_ EngineSpeedError : 1|1@1+ (1,0) [0|1] "" DSC
+ SG_ AscAcknowledge : 2|1@1+ (1,0) [0|1] "" DSC
+ SG_ TorqueInterventionState : 4|2@1+ (1,0) [0|3] "" DSC
+ SG_ TorqueIndexed : 8|8@1+ (0.390625,0) [0|99.609375] "%" DSC
+ SG_ EngineSpeed : 16|16@1+ (0.15625,0) [0|10239.84375] "rpm" DSC
+ SG_ TorqueIndicated : 32|8@1+ (0.390625,0) [0|99.609375] "%" DSC
+ SG_ TorqueLoss : 40|8@1+ (0.390625,0) [0|99.609375] "%" DSC
+
+BO_ 809 DME2_Engine: 8 DME
+ SG_ MuxValue : 0|6@1+ (1,0) [0|63] "" DSC
+ SG_ MuxSelector : 6|2@1+ (1,0) [0|3] "" DSC
+ SG_ PedalValue : 40|8@1+ (0.390625,0) [0|99.609375] "%" DSC
+
+BO_ 501 LWS1_SteeringAngle: 8 LWS
+ SG_ SteerAngleMagnitude : 0|15@1+ (0.0439453,0) [0|1439.9556451] "deg" DSC
+ SG_ SteerAngleSign : 15|1@1+ (1,0) [0|1] "" DSC
+ SG_ SteerRateMagnitude : 16|15@1+ (0.0439453,0) [0|1439.9556451] "deg/s" DSC
+ SG_ SteerRateSign : 31|1@1+ (1,0) [0|1] "" DSC
+ SG_ Byte4_Ignored : 32|8@1+ (1,0) [0|255] "" DSC
+ SG_ SensorStatus : 40|4@1+ (1,0) [0|15] "" DSC
+ SG_ AliveCounter : 44|4@1+ (1,0) [0|15] "" DSC
+
+BO_ 1087 EGS1_Gearbox: 8 EGS
+ SG_ Gear : 0|3@1+ (1,0) [0|7] "" DSC
+ SG_ ShiftActive : 3|1@1+ (1,0) [0|1] "" DSC
+ SG_ ConverterClutchState : 6|2@1+ (1,0) [0|3] "" DSC
+ SG_ GearboxVariantBit : 42|1@1+ (1,0) [0|1] "" DSC
+
+BO_ 1085 AMT1_Gearbox: 8 EGS
+ SG_ Gear : 0|3@1+ (1,0) [0|7] "" DSC
+ SG_ ShiftActive : 3|1@1+ (1,0) [0|1] "" DSC
+
+BO_ 565 DME_Intervention_B: 4 DME
+ SG_ TorqueInterventionState_B : 4|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 1557 KOMBI3_Status: 8 KOMBI
+ SG_ TrailerMode : 9|1@1+ (1,0) [0|1] "" DSC
+
+BO_ 1555 KOMBI2_Odometer: 8 KOMBI
+ SG_ Odometer : 0|16@1+ (10,0) [0|655350] "km" DSC
+
+BO_ 1552 KOMBI_VehicleIdent: 8 KOMBI
+ SG_ Vin0_hi : 4|4@1+ (1,0) [0|15] "" DSC
+ SG_ Vin1 : 8|8@1+ (1,0) [0|255] "" DSC
+ SG_ Vin2 : 16|8@1+ (1,0) [0|255] "" DSC
+ SG_ Vin3 : 24|8@1+ (1,0) [0|255] "" DSC
+ SG_ Vin4 : 32|8@1+ (1,0) [0|255] "" DSC
+
+CM_ "BMW ABS/DSC module, Continental Teves MK60 (non-M; software identification APPY2782.KC8; the E46-generation bus: the vehicle is inferred from the identifiers, the image carries no part number). Node DSC = this module. PT-CAN (the power-train bus): 3 frames sent, 9 received. Every field of the firmware's message table is listed. Names follow what the firmware does with a field; scalings are given where the code or the software family establishes them, other fields are raw. Nothing here is bench-checked. Byte/bit numbering 0-based, little-endian (Intel). 500 kbit/s, 14 time quanta per bit. The module sends its data frames once per control cycle, 7 ms (derived from its timer setup, not measured; public E46 definitions quote 10 or 20 ms), and holds them back after a cold start until the engine frame 0x329 has delivered a valid CAN level (byte 0 = 0x11 or 0x36); only its remote request on 0x610 goes out before that. E46 signal names quoted in the comments are from public definitions of the engine-controller bus. Fault references are the DTC numbers of the module's fault table.";
+CM_ BO_ 339 "DSC status, torque requests and vehicle speed, to the engine and gearbox. Sent by this module, every control cycle (7 ms).";
+CM_ SG_ 339 AscTorqueReductionRequest "Torque reduction request to the engine: ASR active or the AYC torque path (tcs_asr_flags[1] bit 4, published in 0x400798 bit 0 by the CAN application 0x1C854); in diagnostic mode (0x4005CE & 0x21) the output override channel 0 of 0x30492 / 0x304FC replaces it. E46: LV_ASC_REQ.";
+CM_ SG_ 339 MsrTorqueRaiseRequest "Drag-torque (MSR) raise request, set with a non-zero byte 4 (0x400798 bit 1); in diagnostic mode (0x4005CE & 0x21) the output override channel 1 of 0x30492 / 0x304FC replaces it. E46: LV_MSR_REQ.";
+CM_ SG_ 339 AscPassive "ASR engine intervention inhibited (tcs_inhibit bit 6) and no ASR request running; in diagnostic mode: no override on channels 0 and 1. E46: LV_ASC_PASV.";
+CM_ SG_ 339 AscShiftInfluence "ASR deep in a reduction, or AYC intervening (0x400E91 bit 2, tcs_asr_active_indicator_update 0x385A4): asks the gearbox not to shift. E46: LV_ASC_SW_INT.";
+CM_ SG_ 339 BrakeLightSwitch "Brake-light switch (reader 0x16FF4, conditioned at 0x23968; invalid inputs count as pressed); the bit the ABS code reads (0x400934 bit 0). E46: LV_BLS.";
+CM_ SG_ 339 Lamp_BrakeAssistOff "Lamp request 4: brake assist unavailable, when coding option 5 or 13 is set (fault reaction 0x33170, status bit 4), or DSC off on some codings (control dispatcher 0x20D58). E46 position: LV_BAS.";
+CM_ SG_ 339 Lamp_TotalOff "Lamp request 1: ABS and brake-force distribution lost (the fault reaction's total-off state); also on during start-up. E46 position: LV_EBV.";
+CM_ SG_ 339 Lamp_Abs "Lamp request 0: the ABS lamp (total-off or ABS-off state, or the latched fault word 0x400E1A bit 0); a short flash pattern for fault 0x10080. The same request drives the unit's only hard-wired lamp output (0x17D6C). E46: LV_ABS_LED.";
+CM_ SG_ 339 Lamp_Dsc "The DSC / ASC lamp: steady for traction control off (lamp request 2: reaction status bit 2 or the TCS inhibit) or DSC off / failed (request 3); flashing at about 2 Hz (72-cycle period: timers 0x4007AF / 0x4007B0, started by lamp requests 9 / 10 from the control dispatcher) while a control runs; in diagnostic mode request 2 alone. E46 position: LV_ASC_REG.";
+CM_ SG_ 339 RegulationActive "Any control running: ABS (abs_ctl_state & 0x18), brake TCS, ASR, MSR, a torque request, or AYC.";
+CM_ SG_ 339 VehicleSpeedInvalid "Both front wheel speeds unusable (the speed field is then 0x1FFF); set by the speed getter earlier in the same frame.";
+CM_ SG_ 339 VehicleSpeed "Mean of the two front (non-driven) wheel speeds, records 0 and 1, each limited to 0.60..300 km/h (whl_speed_min = 60, set at 0x1A57C); one wheel alone if the other is faulty. E46: VSS Encoding: u13, 0.0625 km/h per count (raw = mean x 4 / 25 of the internal 0.01 km/h); 0x1FFF = invalid.";
+CM_ SG_ 339 TorqueRequest_ASC "Torque ceiling of the reduction, fast path (MSS54 specification: md_ind_asc, reduction by ignition retard), from tcs_dme_trq_req_b (0x400E9A) -> 0x400795; during an MSR raise it is 0xFF - byte 4; with a standard torque of 0 a reduction sends 0; in diagnostic mode (0x4005CE & 0x21) the output override channel 2 of 0x30492 / 0x304FC replaces it. E46: MD_IND_ASC (public definition: HEX x 0.390625 %, 0xFF = no reduction, 0 = maximum reduction) Encoding: u8, 1 count = 100/256 % of the engine's standard torque (DME2 mux); indicated torque (request + loss 0x400748). 0..0xFE = ceiling, 0xFF = no request.";
+CM_ SG_ 339 TorqueRequest_MSR "Torque floor of the drag-torque raise (MSS54 specification: md_ind_msr, increase by raising the filling), from tcs_dme_trq_req_a (0x400E98) -> 0x400797; in diagnostic mode (0x4005CE & 0x21) the output override channel 3 of 0x30492 / 0x304FC replaces it. E46: MD_IND_MSR (public definition: 0 = no torque increase, 0xFF = maximum increase) Encoding: u8, 1 count = 100/256 % of the engine's standard torque (DME2 mux); indicated torque (request + loss 0x400748). 0 = no request.";
+CM_ SG_ 339 CanLevelMarker "A constant keyed to the CAN level the engine reported in DME2 (0x1D6CC). The public MS43 definition lists ASC1 byte 5 as unused, so the engine controller of that generation ignores it Encoding: u8: 0xFF at engine CAN level 0x11, else 0.";
+CM_ SG_ 339 TorqueRequest_ASC_Slow "Torque ceiling of the reduction, slow path (MSS54 specification: md_ind_asc_lm, reduction by reducing the filling), from tcs_dme_trq_req_a -> 0x400796; in diagnostic mode (0x4005CE & 0x21) the output override channel 4 of 0x30492 / 0x304FC replaces it. E46: MD_IND_ASC_LM Encoding: u8, 1 count = 100/256 % of the engine's standard torque (DME2 mux); indicated torque (request + loss 0x400748). idle value 0xFF at CAN level 0x11, 0 at level 0x36 (the field is used at level 0x11 only).";
+CM_ SG_ 339 DscReducedMode "DSC switched to its reduced mode: DSC switch state 4 or 7 on the variant without the coding bit (table 0x3E4B4), or the start-up phase; in diagnostic mode (0x4005CE & 0x21) the output override channel 11 of 0x30492 / 0x304FC replaces it. Which vehicles have that variant is not in the image.";
+CM_ SG_ 339 DscAscDisabledLatched "A DSC / ASC function is disabled: the latched function-disable mask 0x400DDE & 0x38, taken over above 10 km/h (or with all four wheel sensors faulty) and held; in diagnostic mode (0x4005CE & 0x21) the output override channel 12 of 0x30492 / 0x304FC replaces it.";
+CM_ SG_ 339 RpaLampState "The tyre-pressure (RPA) lamp: channel 0 of the lamp pattern generator 0x21C2A, pattern selected by 0x21DAC from the RPA status Encoding: u2: 0 off, 1 on, 3 pressure-loss warning (2 does not occur).";
+CM_ SG_ 339 Reversing "AYC motion state: the vehicle is reversing (ayc_state_flags bit 4, written by ayc_motion_state_update 0x100EC).";
+CM_ SG_ 339 BrakeFluidOk "The brake-fluid level switch reads not-low with valid inputs (reader 0x1701A, which also feeds the 60 s fluid monitor 0x2ADF0 and fault 0x90200). The sibling readers are the brake-light switch 0x16FF4, the DSC button 0x17046 and the RPA button 0x1709C Encoding: bit, 1 = level OK.";
+CM_ BO_ 496 "The four wheel speeds, with each wheel's rolling-radius correction multiplexed over four cycles. Sent by this module, every control cycle (7 ms).";
+CM_ SG_ 496 WheelSpeed_FL "Front-left wheel speed (record 0). The axle grouping of the four records is proven in the code; left / right within an axle is the E90 M3's order Encoding: u13, 0.0625 km/h per count (minimum 9 = 0.60 km/h); 0x1FFF = invalid (sensor fault or DSC state bit 5).";
+CM_ SG_ 496 WheelTolMux "Cycle counter & 3: the wheel whose rolling-radius correction the WheelTolValue fields carry (written by the frame callback 0x1D532).";
+CM_ SG_ 496 WheelTolLearned "The wheel-tolerance adaptation is complete.";
+CM_ SG_ 496 WheelSpeed_FR "Front-right wheel speed (record 1) Encoding: as whl_speed_fl.";
+CM_ SG_ 496 WheelTolValue_b0 "Bits 0-1, inverted, of the selected wheel's rolling-radius correction (radius deficit in 0.1 % steps, 0..12.7 %).";
+CM_ SG_ 496 WheelSpeed_RL "Rear-left wheel speed (record 2) Encoding: as whl_speed_fl.";
+CM_ SG_ 496 WheelTolValue_b2 "Bits 2-4 of the correction, inverted.";
+CM_ SG_ 496 WheelSpeed_RR "Rear-right wheel speed (record 3) Encoding: as whl_speed_fl.";
+CM_ SG_ 496 WheelTolValue_b5 "Bits 5-6 of the correction, inverted.";
+CM_ SG_ 496 WheelTolPresent "1 when a correction is present (the stored byte is not 0xFF).";
+CM_ BO_ 499 "Yaw rate, lateral and longitudinal acceleration (E46: AY_REF, AX_REF), AYC status (E46: DSC_REG). Sent by this module, every control cycle (7 ms).";
+CM_ SG_ 499 YawRateState "Low bits of the yaw word. The word 0x8000 (state 0, sign 1, magnitude 0) is sent during start-up; a real yaw of -1..-42 counts also lands on state 0 sign 1, so start-up and a small negative rate are indistinguishable. 0x8001 once after a diagnostic request, 0x8002 with the yaw fault bit.";
+CM_ SG_ 499 YawRateMagnitude "Magnitude = |0x400980| x 384 / 16384, limited to 511. 0x400980 is the offset-corrected cluster yaw, internal unit 1/20000 rad/s = 0.0028648 deg/s per count (the cluster wire unit, confirmed by the E90 M3 csi_yaw_slewed): bus LSB = 16384/384 x that = 0.12223 deg/s. Derived from the code, not bench-checked.";
+CM_ SG_ 499 YawRateSign "Sign of the yaw rate; also set in the three state codes (word 0x8000..0x8002).";
+CM_ SG_ 499 LongitudinalAccel "0x1FF + 0x40094A x 523 / 16384, from csi_ax_front_accel_avg (the front wheel speeds, not the cluster); internal unit 0.001 m/s2. Clamped to +-9.81 m/s2 at source.";
+CM_ SG_ 499 AycActive "AYC intervening: yaw-moment (brake) control or the AYC torque path active (ayc_status_flags & 3). E46: DSC_REG.";
+CM_ SG_ 499 LateralAccel "0x200 + 0x40096E x 837 / 4096. 0x40096E is the lateral acceleration, internal unit 0.001 g (the cluster wire unit, confirmed by the E90 M3 csi_ay): bus LSB = 4096/837 x 0.001 g = 4.894 mg. Derived from the code.";
+CM_ SG_ 499 DscFailedLatched "DSC failed: the function-disable mask 0x400DDE bit 5, taken over above 10 km/h and held.";
+CM_ SG_ 499 StandstillValid "The standstill window is open (0x400948 bit 0, set at 0x28DE6), all four wheel sensors healthy and the DSC state bit 5 clear.";
+CM_ BO_ 790 "Engine: speed, torques, intervention acknowledge. Received by this module, timeout 71 cycles (about 0.5 s). On timeout: fault 0xA0008 (DTC 0x5E14).";
+CM_ SG_ 790 EngineSpeedError "Engine-speed signal invalid: marks rpm invalid and starts a 72-cycle timer -> fault 0xA0020. E46: LV_F_N_ENG.";
+CM_ SG_ 790 AscAcknowledge "The engine acknowledges the ASC interface; not 1 for 72 cycles -> fault 0xB0010. E46: LV_ACK_TCS Encoding: bit, must be 1.";
+CM_ SG_ 790 TorqueInterventionState "State of the engine's torque intervention; 3 for 72 cycles -> fault 0xB0040. E46: SF_TQD; the MSS54 definition of the same status (K_MD_STAT_ASC): 0 normal function, 1 no ignition intervention, 2 no filling intervention, 3 all interventions rejected Encoding: u2 (used at CAN level 0x11 only): 0 and 1 leave the intervention available, 2 sets the limited flag (0x40074D bit 1), 3 = not possible.";
+CM_ SG_ 790 TorqueIndexed "Effective engine torque after interventions (0x400746). E46: TQI_TQR_CAN (MSS54: md_ind_ne_ist, the indicated torque with all interventions) Encoding: u8, as trq_loss, minus the loss.";
+CM_ SG_ 790 EngineSpeed "Engine speed (0x400740); a gradient in 10 rpm/s per count is filtered from successive values with the constant 0x1B57E4A8 = 7 x 65535 x 1000 (the 7 ms cycle). E46: N_ENG Encoding: u16; stored = raw x 16 / 51 in 0.5 rpm (the engine's 0.15625 rpm per raw count).";
+CM_ SG_ 790 TorqueIndicated "Effective torque of the driver's demand path (0x400744). E46: TQI_CAN (MSS54: md_ind_ist, the indicated torque without the DSC interventions) Encoding: u8, as trq_loss, minus the loss.";
+CM_ SG_ 790 TorqueLoss "Friction torque (0x400748). E46: TQ_LOSS_CAN (MSS54 specification: md_reib_can, the engine's loss torque including all consumers) Encoding: u8; stored = raw x N x 32 / 51 at CAN level 0x11 or raw x N x 64 / 164 at level 0x36, N = the standard torque from DME2; internal 0.1 Nm when N is in 16 Nm steps (level 0x11) or 10 Nm steps (level 0x36): raw is then 100/256 % of the standard torque.";
+CM_ BO_ 809 "Engine: multiplexed CAN level / standard torque, pedal value. Received by this module, timeout 71 cycles (about 0.5 s). On timeout: fault 0xA0008 (DTC 0x5E14).";
+CM_ SG_ 809 MuxValue "Selector 0: the engine's CAN level (0x11 or 0x36 accepted, another sets DTC 5E11). Selector 3: the standard torque that scales the DME1 torque bytes.";
+CM_ SG_ 809 MuxSelector "Selects what MuxValue carries; selectors 1 and 2 are ignored.";
+CM_ SG_ 809 PedalValue "Accelerator pedal position (0x400742); invalid for 72 cycles -> fault 0xA0020. E46: TPS_CAN, HEX x 0.390625 % of the pedal range, 0xFF = pedal sensor error Encoding: u8 counts 0..254, 0xFF = invalid.";
+CM_ BO_ 501 "Steering-angle sensor: angle, angular rate, status, counter. Received by this module, timeout 14 cycles (about 0.1 s). On timeout: fault 0xA0040 (DTC 0x5E1E), angle and rate marked invalid.";
+CM_ SG_ 501 SteerAngleMagnitude "Magnitude of the steering-wheel angle (sign-magnitude; the word 0x8000 = invalid). The firmware uses the count unscaled; 45/1024 deg per count is the E46 sensor's scale (public definition: 0.04394), positive = left.";
+CM_ SG_ 501 SteerAngleSign "Sign of the steering-wheel angle.";
+CM_ SG_ 501 SteerRateMagnitude "Magnitude of the steering-wheel angular rate (sign-magnitude; the word 0x8000 = invalid). Scale as the angle's, from the public definition of the sensor.";
+CM_ SG_ 501 SteerRateSign "Sign of the steering-wheel angular rate.";
+CM_ SG_ 501 Byte4_Ignored "Received and ignored (empty setter 0x1DD62). E46: PSTE_ID, the identifier for zero-setting the sensor.";
+CM_ SG_ 501 SensorStatus "Steering-angle sensor state (0x4007C1 bits 0-1): 2 for 72 cycles -> fault 0x120010; 3 restarts the monitor without a fault; 4-7 fault at once (monitor 0x29B20). E46: PSTE_STATUS, the sensor's internal status code (the public definition has no code table) Encoding: u4, low 3 bits: 0-1 valid, 2 not valid, 3 re-initialising, 4-7 internal fault.";
+CM_ SG_ 501 AliveCounter "Must differ from the previous frame's: an unchanged value drops the frame and does not reload the timeout. E46: PSTE_CNT, the telegram counter.";
+CM_ BO_ 1087 "Automatic gearbox: gear, shift in progress, converter state. Received by this module, timeout 71 cycles (about 0.5 s). On timeout: fault 0xA0010 (DTC 0x5E15), gear data invalid.";
+CM_ SG_ 1087 Gear "Current gear (0x400754), or the target gear (0x400755) while shift_active. E46: GEAR_INFO (0 neutral, 1-6, 7 reverse) Encoding: u3: 0 none, 1-6 gear, 7 reverse (stored as 8).";
+CM_ SG_ 1087 ShiftActive "Gear shift in progress (0x400757 bit 0; read by TCS and AYC); the gear field is then the target gear. E46: LV_GS.";
+CM_ SG_ 1087 ConverterClutchState "Converter / drive-line state (0x40074D bit 3): an open drive line limits the MSR torque request. E46: STATE_CC, the converter lock-up clutch (0 disengaged, 1 regulated, 2 closed, 3 unknown) Encoding: u2: 0-1 open / slipping, 2 locked, 3 invalid.";
+CM_ SG_ 1087 GearboxVariantBit "Checked against the coded gearbox type (0x40074B = 1: coding byte 2 bits 7-6 = 1); a mismatch sets fault 0xC0002 (DTC 0x5E59). The value 1 belongs to type 5, which the coding range check rejects. E46: TCU_TYP, the gearbox controller type (EGS / SMG) Encoding: bit, must be 0.";
+CM_ BO_ 1085 "The automated manual gearbox (SMG / SSG) frame, used with the coded gearbox type 6 (coding byte 2 bits 7-6 = 2). Received by this module, timeout 71 cycles (about 0.5 s). On timeout: fault 0xA0010 (DTC 0x5E15).";
+CM_ SG_ 1085 Gear "As EGS1, for gearbox type 6. E46: AMT1 GEAR_INFO (bits 4-5 of the byte, STATE_AMT, and bit 7, the engine-stop request, are not read) Encoding: u3, as EGS1.";
+CM_ SG_ 1085 ShiftActive "As EGS1; used with the coded gearbox type 6 (coding byte 2 bits 7-6 = 2); the frame's presence with another type sets fault 0xC0002. E46: AMT1 byte 0 bit 3 LV_GS, sent by the automated manual gearbox (SMG / SSG) controller.";
+CM_ BO_ 565 "The intervention state at engine CAN level 0x36. Received by this module, timeout 71 cycles (about 0.5 s). On timeout: fault 0xA0008 (DTC 0x5E14).";
+CM_ SG_ 565 TorqueInterventionState_B "The intervention state at engine CAN level 0x36 (DME1 0.4 serves level 0x11); 3 for 72 cycles -> fault 0xB0040 Encoding: u2: 3 = not possible, else none.";
+CM_ BO_ 1557 "Instrument cluster: the bit that selects the tyre-pressure monitor's alternative mode. Received by this module, timeout 142 cycles (about 1.0 s). On timeout: fault 0xB0004 (DTC 0x5E16).";
+CM_ SG_ 1557 TrailerMode "Selects the tyre-pressure monitor's alternative mode (0x400736 bit 0, read by rpa_main 0x2B5AE); read only with coding option 3 = RPA coded (coding byte 10 bit 5). E46: ICL3 LV_TOW, trailer operation mode (the E90 M3's counterpart is its trailer flag too).";
+CM_ BO_ 1555 "Instrument cluster: the odometer in 10 km. Received by this module, timeout 142 cycles (about 1.0 s). On timeout: fault 0xB0004 (DTC 0x5E16).";
+CM_ SG_ 1555 Odometer "The cluster's distance count (0x4007A4): RPA event odometer, AYC scale store, fault environment data. E46: ICL2 KM_CTR_CAN, HEX x 10 km Encoding: u16 in 10 km, 0xFFFF = not available.";
+CM_ BO_ 1552 "Instrument cluster: the vehicle-identification excerpt, sent in answer to this unit's remote frame. Received by this module, in answer to this module's remote frame. On timeout: re-sends the remote request (0x1C68E) four times, 28 cycles apart (five remote frames in all), then faults 0xB0004 and 0xB0002 (DTC 0x5E16, 0x5E1F) at about cycle 211 (1.48 s).";
+CM_ SG_ 1552 Vin0_hi "High nibble of byte 0 of the vehicle-identification excerpt (nine nibbles in bytes 0-4), compared once with the stored one (NVM block 6); a difference sets DTC 5E1F. The frame answers this unit's remote frame on 0x610.";
+CM_ SG_ 1552 Vin1 "Vehicle-identification byte 1.";
+CM_ SG_ 1552 Vin2 "Vehicle-identification byte 2.";
+CM_ SG_ 1552 Vin3 "Vehicle-identification byte 3.";
+CM_ SG_ 1552 Vin4 "Vehicle-identification byte 4.";
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 65535;
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 339 7;
+BA_ "GenMsgCycleTime" BO_ 496 7;
+BA_ "GenMsgCycleTime" BO_ 499 7;
+
+VAL_ 339 BrakeLightSwitch 0 "Released" 1 "Pressed" ;
+VAL_ 339 VehicleSpeed 8191 "Invalid" ;
+VAL_ 339 TorqueRequest_ASC 255 "NoRequest" ;
+VAL_ 339 TorqueRequest_MSR 0 "NoRequest" ;
+VAL_ 339 CanLevelMarker 0 "OtherLevel" 255 "Level_0x11" ;
+VAL_ 339 RpaLampState 0 "Off" 1 "On" 3 "PressureLossWarning" ;
+VAL_ 339 BrakeFluidOk 0 "LowOrInvalid" 1 "Ok" ;
+VAL_ 496 WheelSpeed_FL 8191 "Invalid" ;
+VAL_ 496 WheelTolMux 0 "FL" 1 "FR" 2 "RL" 3 "RR" ;
+VAL_ 496 WheelSpeed_FR 8191 "Invalid" ;
+VAL_ 496 WheelSpeed_RL 8191 "Invalid" ;
+VAL_ 496 WheelSpeed_RR 8191 "Invalid" ;
+VAL_ 499 YawRateState 0 "ValueOrStartup" 1 "AfterDiagRequest" 2 "SensorFault" ;
+VAL_ 499 YawRateSign 0 "Positive" 1 "Negative" ;
+VAL_ 499 LongitudinalAccel 1023 "Invalid" ;
+VAL_ 499 LateralAccel 1023 "SensorFault" ;
+VAL_ 790 TorqueInterventionState 0 "Normal" 1 "NoIgnitionIntervention" 2 "NoFillingIntervention" 3 "AllRejected" ;
+VAL_ 809 MuxSelector 0 "CanLevel" 3 "StandardTorque" ;
+VAL_ 809 PedalValue 255 "Invalid" ;
+VAL_ 501 SteerAngleSign 0 "Positive" 1 "Negative" ;
+VAL_ 501 SteerRateSign 0 "Positive" 1 "Negative" ;
+VAL_ 501 SensorStatus 0 "Valid" 1 "Valid_1" 2 "NotValid" 3 "Reinitialising" 4 "InternalFault" ;
+VAL_ 1087 Gear 0 "None" 7 "Reverse" ;
+VAL_ 1087 ConverterClutchState 0 "Disengaged" 1 "Regulated" 2 "Closed" 3 "Unknown" ;
+VAL_ 565 TorqueInterventionState_B 0 "Normal" 1 "NoIgnitionIntervention" 2 "NoFillingIntervention" 3 "AllRejected" ;
+VAL_ 1555 Odometer 65535 "NotAvailable" ;

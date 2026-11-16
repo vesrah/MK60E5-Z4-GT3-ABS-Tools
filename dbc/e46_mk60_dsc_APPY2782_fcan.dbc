@@ -1,0 +1,80 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DSC SensorCluster
+
+BO_ 2 Sensor_Command: 2 DSC
+ SG_ YawSelfTestRequest : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ AccelSelfTestRequest : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+
+BO_ 304 Cluster_A: 8 SensorCluster
+ SG_ YawRate : 0|16@1- (0.0028648,0) [-93.8737664|93.8709016] "deg/s" DSC
+ SG_ Word1 : 16|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ LateralAccel : 32|16@1- (0.001,0) [-32.768|32.767] "g" DSC
+ SG_ Status_A : 48|2@1+ (1,0) [0|3] "" DSC
+ SG_ Status_B : 50|2@1+ (1,0) [0|3] "" DSC
+ SG_ AliveCounter : 52|4@1+ (1,0) [0|15] "" DSC
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 305 Cluster_B: 8 SensorCluster
+ SG_ Word3 : 0|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ Word4 : 16|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ Word5 : 32|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ Status_A : 48|2@1+ (1,0) [0|3] "" DSC
+ SG_ Status_B : 50|2@1+ (1,0) [0|3] "" DSC
+ SG_ AliveCounter : 52|4@1+ (1,0) [0|15] "" DSC
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 306 Cluster_Status: 8 SensorCluster
+ SG_ ChannelStatus_0 : 0|4@1+ (1,0) [0|15] "" DSC
+ SG_ ChannelStatus_2 : 4|4@1+ (1,0) [0|15] "" DSC
+ SG_ ChannelStatus_3 : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ ChannelStatus_1 : 12|4@1+ (1,0) [0|15] "" DSC
+ SG_ ErrorBits_Lo : 16|8@1+ (1,0) [0|255] "" DSC
+ SG_ ErrorBits_Hi : 24|8@1+ (1,0) [0|255] "" DSC
+ SG_ Byte4_Unread : 32|8@1+ (1,0) [0|255] "" DSC
+ SG_ BlockChecksum : 40|8@1+ (1,0) [0|255] "" DSC
+ SG_ ModeBits : 48|4@1+ (1,0) [0|15] "" DSC
+ SG_ AliveCounter : 52|4@1+ (1,0) [0|15] "" DSC
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" DSC
+
+CM_ "BMW ABS/DSC module, Continental Teves MK60 (non-M; software identification APPY2782.KC8; the E46-generation bus: the vehicle is inferred from the identifiers, the image carries no part number). Node DSC = this module. The private bus of the yaw-rate / acceleration sensor cluster (F-CAN in the later modules): 1 frame sent, 3 received; the Z4 GT3's cluster identifiers with the DSC81's word order (lateral acceleration in bytes 4-5 of 0x130; no longitudinal acceleration is read from the cluster). Every field of the firmware's message table is listed. Names follow what the firmware does with a field; scalings are given where the code or the software family establishes them, other fields are raw. Nothing here is bench-checked. Byte/bit numbering 0-based, little-endian (Intel). 500 kbit/s, 14 time quanta per bit. The module sends its data frames once per control cycle, 7 ms (derived from its timer setup, not measured; public E46 definitions quote 10 or 20 ms), and holds them back after a cold start until the engine frame 0x329 has delivered a valid CAN level (byte 0 = 0x11 or 0x36); only its remote request on 0x610 goes out before that. E46 signal names quoted in the comments are from public definitions of the engine-controller bus. Fault references are the DTC numbers of the module's fault table.";
+CM_ BO_ 2 "Self-test command to the sensor cluster, sent every cycle. Sent by this module, every control cycle (7 ms).";
+CM_ SG_ 2 YawSelfTestRequest "1 while the yaw-rate self-test is requested (about every 60 s); the cluster acknowledges in 0x132 and offsets the yaw word by 7.5..42.5 deg/s.";
+CM_ SG_ 2 AccelSelfTestRequest "1 while the lateral-acceleration self-test is requested; the cluster acknowledges in 0x132 and drives the lateral word beyond 1.8 g.";
+CM_ BO_ 304 "Sensor cluster frame 1: yaw rate, an unread word, lateral acceleration, two state fields, counter, CRC. Received by this module, timeout 14 cycles (about 0.1 s). On timeout: cluster fault note 0xA1000 (DTC 0x5D8C); a CRC error, a repeated counter and a missing frame all end here.";
+CM_ SG_ 304 YawRate "Yaw rate: read by 0x2502E, multiplied by the variant's sign (table 0x3E90E: -1), slew-limited by 610 per cycle and low-passed 245/256 into csi_yaw_lp, minus the offset; no rescaling, so the internal unit is the wire's. Also the yaw self-test and step-detector input Encoding: s16, 0.5e-4 rad/s per count (0.0028648 deg/s) -> 0x400E76.";
+CM_ SG_ 304 Word1 "Never read by the control (only copied into the identification block). The E90 M3 does not use its word 1 either Encoding: s16 -> 0x400E7A.";
+CM_ SG_ 304 LateralAccel "Lateral acceleration: read by 0x24A88, multiplied by the variant's sign (table 0x3E8F0: -1, +1 for coding index 4), slew-limited by 34 per cycle and low-passed 245/256 into csi_ay_lp; the internal unit is the wire's. Also the acceleration self-test input Encoding: s16, 0.001 g per count -> 0x400E7E.";
+CM_ SG_ 304 Status_A "Stored in 0x400E60 bits 0-1; no code reads that byte. The E90 M3, the DSC81 and the Z4 GT3 store the same fields without reading them either, so no firmware of the family gives them a meaning.";
+CM_ SG_ 304 Status_B "Stored in 0x400E60 bits 2-3; never read.";
+CM_ SG_ 304 AliveCounter "Must differ from the previous frame's (0x400E82); not checked during start-up.";
+CM_ SG_ 304 Checksum "CRC-8 of bytes 0-6 (polynomial 0x1D, start 0xFF, inverted); a mismatch rejects the frame.";
+CM_ BO_ 305 "Sensor cluster frame 2: three 16-bit words the control does not read (identification block), states, counter, CRC. Received by this module, timeout 14 cycles (about 0.1 s). On timeout: cluster fault note 0xA1000 (DTC 0x5D8C).";
+CM_ SG_ 305 Word3 "Never read by the control (only copied into the identification block). On the E90 M3 word 3 is the second yaw channel, stored and not used as the yaw rate Encoding: s16 -> 0x400E78.";
+CM_ SG_ 305 Word4 "As word3 Encoding: s16 -> 0x400E7C.";
+CM_ SG_ 305 Word5 "As word3. The Z4 GT3 and the E90 M3 take the longitudinal acceleration from this word; the MK60 has no reader of it Encoding: s16 -> 0x400E80.";
+CM_ SG_ 305 Status_A "Stored in 0x400E60 bits 4-5; never read.";
+CM_ SG_ 305 Status_B "Stored in 0x400E60 bits 6-7; never read.";
+CM_ SG_ 305 AliveCounter "Must differ from the previous frame's (0x400E83).";
+CM_ SG_ 305 Checksum "CRC-8 of bytes 0-6; a mismatch rejects the frame.";
+CM_ BO_ 306 "Sensor cluster frame 3: four channel status nibbles, sixteen error bits, the block checksum, mode bits, counter, CRC. Received by this module, timeout 14 cycles (about 0.1 s). On timeout: cluster fault note 0xA1000 (DTC 0x5D8C).";
+CM_ SG_ 306 ChannelStatus_0 "Status of channel 0 (yaw), read by fault_mon_cluster_channel_status Encoding: u4 -> 0x400E85: bit 0 set for more than 107 cycles -> fault 0x100001; bit 1 hard fault -> 0x100001; bit 2 not trusted; bit 3 self-test acknowledge.";
+CM_ SG_ 306 ChannelStatus_2 "Status of channel 2 (lateral acceleration) Encoding: u4 -> 0x400E87: bit 1 hard fault -> 0x100100; bit 2 not trusted; bit 3 = the acceleration self-test is acknowledged.";
+CM_ SG_ 306 ChannelStatus_3 "Status of channel 3 Encoding: u4 -> 0x400E88: only bit 3 is read (the yaw self-test is active).";
+CM_ SG_ 306 ChannelStatus_1 "Status of channel 1 (yaw, second) Encoding: u4 -> 0x400E86: bit 1 hard fault -> 0x100001; bit 3 = the yaw self-test is acknowledged.";
+CM_ SG_ 306 ErrorBits_Lo "Cluster error bits 0-7: each sets fault 0xF0000 | bit (DTC 0x5D8F); the low bits are masked below 20 km/h. What each bit means inside the cluster is not in the image Encoding: u8 -> 0x400E8A.";
+CM_ SG_ 306 ErrorBits_Hi "Cluster error bits 8-15 (the top two: DTC 0x5D97) Encoding: u8 -> 0x400E8C.";
+CM_ SG_ 306 Byte4_Unread "Stored; no function reads the address Encoding: u8 -> 0x400E8E.";
+CM_ SG_ 306 BlockChecksum "Inverted byte sum of the 12-byte identification block; its only checker (0x3454A) has no caller Encoding: u8 -> 0x400630.";
+CM_ SG_ 306 ModeBits "Bit 3 = identification mode: the six data words are captured into the block 0x400624 and the yaw / lateral inputs are frozen; nothing consumes the block. Bit 0 is stored and never read Encoding: u4: bits 0 and 3 kept (0x400E62).";
+CM_ SG_ 306 AliveCounter "Must differ from the previous frame's (0x400E84).";
+CM_ SG_ 306 Checksum "CRC-8 of bytes 0-6; a mismatch rejects the frame.";
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 65535;
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 2 7;
+
