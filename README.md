@@ -3,6 +3,45 @@ Tools and notes to help in the diagnosis and configuration of the MK60E5 out of 
 
 The part number for these units is 34516769162 with the 829.3 code on the module.  They are compatible with a VW yaw sensor with the part number 7H0907652A, note that this yaw sensor is not pinned the same as the BMW yaw sensor.
 
+## How the GT3 software differs from the road car
+A recap of how the Z4 GT3 software (6769162) differs from the road-car M3 MK60E5 software. Neither is derived from the other: both are branches of the same parent software, so each difference below is a comparison between the two branches, not a record of what was changed. The behaviour is read from the firmware; what it means on track is interpretation and has not been measured.
+
+In short, where the road-car branch is a road ABS with stability functions, this branch is a race ABS that works on wheel slip and deceleration only.
+
+**Set from the car**
+- An ABS level knob, tyre circumferences and a gear-shift flag arrive in one CAN message (`0x5BA`, see below). Nothing else about the ABS can be changed at runtime, and tyre sizes need no recoding.
+- Without `0x5BA` on the bus the module uses level 0 (the most permissive), its built-in tyre sizes, and no gear-shift suppression.
+
+**ABS intervenes later**
+- A wheel has to decelerate harder before ABS starts releasing pressure.
+- The reference speed is allowed to fall much faster, and faster still as speed rises, so the high deceleration that downforce makes possible is not mistaken for all four wheels slipping.
+- The special handling of the first moments of a stop that the road car has is inactive here.
+- The wheel-speed glitch filter only catches sensor dropouts, so kerb strikes and the onset of a lock reach ABS at once.
+
+**ABS releases and rebuilds differently**
+- The first release on a lock is deeper and pressure then comes back in larger steps.
+- Pressure is rebuilt faster, a stop is handed back to the pedal after fewer steps, and easing the pedal ends the pressure-decrease phase at once.
+- The hydraulic model assumes faster valves than the M3's, and the pump is expected to run for long periods.
+
+**Each wheel is judged on its own**
+- The coupling between wheels that the road car has is absent or switched off: the yaw-moment limit on the high-grip front wheel on split surfaces, the inside/outside wheel logic in corners, lateral brake-force distribution, the pre-emptive rear control under hard braking and the paired rear release.
+- There is no brake-based stability help under braking: the car pulls harder toward the high-grip side on a split surface than a road car would.
+- Rear ABS entry does not depend on speed, and rough-road or kerb detection does not make the rear axle more cautious.
+
+**Stability and traction control**
+- Yaw stability control (AYC) is disabled in the code, in every switch mode, with or without the sensors.
+- Traction control is still active. "Off" only stops the engine-torque cut; brake-based traction control stays on and is unaffected by a missing yaw or steering sensor.
+
+**Brake pedal and brake assist**
+- "Driver is braking" comes from master-cylinder pressure, not the brake-light switch. A failed master-pressure sensor therefore hides the pedal from several ABS decisions.
+- Brake assist only triggers at a much higher pedal pressure than on the road car.
+- A brake-fade support mode (extra pressure when the front brakes are hot and fading) exists in the software but is coded off on this module, as are hill hold and brake drying.
+
+**Road-car functions this branch does not have**
+- The road-car ABS mode handshake, reverse-driving detection, brake-fluid level monitoring and tyre-pressure loss detection.
+- Instrument-cluster check-control and service messages, and fault history / freeze-frame data.
+- A confirmation stage for wheel-sensor faults: here they are set directly.
+
 ## CANBUS
 These units, when flashed, read tire circumference (front and rear separately), a traction-control threshold and mode, an ABS intervention level, and a gear-shift flag - all from a single CAN message, ID `0x5BA`. The hosted page at https://vesrah.github.io/MK60E5-Z4-GT3-ABS-Tools/ generates that message for your settings and also includes the diagnostic service tool (see below).
 
