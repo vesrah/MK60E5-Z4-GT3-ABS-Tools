@@ -1,0 +1,831 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DSC DME EGS LDM CAS KOMBI FZD AHM JBBF CCC FRMFA Tester
+
+BO_ 182 TorqueRequest_DSC: 5 DSC
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TorqueTarget : 12|12@1- (0.5,0) [-1024|1023.5] "Nm" Vector__XXX
+ SG_ TorqueTarget_Adj : 24|12@1- (0.5,0) [-1024|1023.5] "Nm" Vector__XXX
+ SG_ RequestType : 36|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AbsAxlePairState : 38|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 191 WheelTorqueRequest_Drivetrain: 5 DSC
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Field_b12 : 12|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TorqueRequest : 16|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ Field_b32 : 32|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Field_b36 : 36|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 196 SteeringAngle: 7 DSC
+ SG_ SteerAngle : 0|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg" Vector__XXX
+ SG_ SteerAngleStatus : 16|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ SteerRate : 24|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg/s" Vector__XXX
+ SG_ Const_b40 : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Const_b48 : 48|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b50 : 50|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 206 WheelSpeeds: 8 DSC
+ SG_ WheelSpeed_FL : 0|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+ SG_ WheelSpeed_FR : 16|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+ SG_ WheelSpeed_RL : 32|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+ SG_ WheelSpeed_RR : 48|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+
+BO_ 225 WheelTorque_Brake: 6 DSC
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Field_b12 : 12|12@1+ (1,0) [0|4095] "" Vector__XXX
+ SG_ Field_b24 : 24|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ Field_b40 : 40|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Field_b42 : 42|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Field_b45 : 45|3@1+ (1,0) [0|7] "" Vector__XXX
+
+BO_ 403 CruiseDisplay_DCC: 8 DSC
+ SG_ Checksum : 0|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ AliveCounter : 4|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ SetpointSpeed : 8|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Field_b16 : 16|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Field_b24 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Field_b32 : 32|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Field_b40 : 40|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Field_b43 : 43|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Field_b48 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Field_b56 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 414 Status_DSC: 8 DSC
+ SG_ ControlActive : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ AbsStatus : 8|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ DscStatus : 10|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Const_b14 : 14|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b16 : 16|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b18 : 18|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AliveCounter : 20|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ TorqueInterventionActive : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ HillHoldPressure : 26|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b28 : 28|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b30 : 30|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b32 : 32|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Const_b36 : 36|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b38 : 38|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ BrakeLightSwitch : 40|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b42 : 42|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ DbcStatus : 44|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ BrakeApplied : 46|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ MasterPressure : 48|8@1+ (1,0) [0|255] "bar" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 416 Speed: 8 DSC
+ SG_ VehicleSpeed : 0|12@1+ (0.1,0) [0|409.5] "km/h" Vector__XXX
+ SG_ DrivingDirection : 12|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ LongitudinalAccel : 16|12@1- (0.025,0) [-51.2|51.175] "m/s^2" Vector__XXX
+ SG_ LateralAccel : 28|12@1- (0.025,0) [-51.2|51.175] "m/s^2" Vector__XXX
+ SG_ YawRate : 40|12@1- (0.05,0) [-102.4|102.35] "deg/s" Vector__XXX
+ SG_ AliveCounter : 52|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 419 AccelLong_Raw: 5 DSC
+ SG_ AccelLongRaw : 0|12@1- (0.01,0) [-20.48|20.47] "m/s^2" Vector__XXX
+ SG_ AccelLongOffset : 12|12@1- (0.01,0) [-20.48|20.47] "m/s^2" Vector__XXX
+ SG_ RawStatus : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ OffsetStatus : 26|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AliveCounter : 28|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Checksum : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 422 Distance: 8 DSC
+ SG_ WheelEdges_Rear : 0|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ WheelEdges_FL : 16|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ WheelEdges_FR : 32|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ DistanceTime : 48|12@1+ (0.25,0) [0|1023.75] "ms" Vector__XXX
+
+BO_ 690 WheelPressure: 8 DSC
+ SG_ WheelPressure_FL : 0|8@1+ (1,0) [0|255] "bar" Vector__XXX
+ SG_ WheelPressure_FR : 8|8@1+ (1,0) [0|255] "bar" Vector__XXX
+ SG_ WheelPressure_RL : 16|8@1+ (1,0) [0|255] "bar" Vector__XXX
+ SG_ WheelPressure_RR : 24|8@1+ (1,0) [0|255] "bar" Vector__XXX
+ SG_ PadWear_Front : 32|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ PadWear_Rear : 34|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ YawRateSlewed : 36|12@1- (0.2,0) [-409.6|409.4] "deg/s" Vector__XXX
+ SG_ Const_b48 : 48|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ HillHoldState : 50|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ Const_b53 : 53|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ BrakePrefillState : 56|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ DiscDryingState : 59|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b61 : 61|3@1+ (1,0) [0|7] "" Vector__XXX
+
+BO_ 691 AccelLong_Slow: 5 DSC
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ AccelLongRaw : 12|12@1+ (0.025,-51.2) [-51.2|51.175] "m/s^2" Vector__XXX
+ SG_ AccelLongOffset : 24|12@1+ (0.025,-51.2) [-51.2|51.175] "m/s^2" Vector__XXX
+ SG_ Status : 36|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 797 TyrePressureStatus: 2 DSC
+ SG_ TyreMonitorState : 0|3@1+ (1,0) [0|7] "" Vector__XXX
+ SG_ TyreWarningFlags : 3|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ TyreResetHandshake : 8|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 884 WheelTolerance: 5 DSC
+ SG_ TyreTrim_FL : 0|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrim_FR : 8|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrim_RL : 16|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrim_RR : 24|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrimStatus : 32|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 1193 NM_DSC: 8 DSC
+ SG_ NM_Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" Vector__XXX
+
+BO_ 1449 ClusterMessage: 8 DSC
+ SG_ Kind : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ MessageId : 8|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ Byte3 : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Byte4 : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Byte5 : 40|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Byte6 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Byte7 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1577 Diag_Response: 8 DSC
+ SG_ TargetAddress : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ TP_Data : 8|56@1+ (1,0) [0|7.205759404e+16] "" Vector__XXX
+
+BO_ 1944 CCP_DTO: 8 DSC
+ SG_ DTO_Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" Vector__XXX
+
+BO_ 200 SteeringAngle_SZL: 8 DSC
+ SG_ SteerAngle : 0|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg" Vector__XXX
+ SG_ AliveCounter : 20|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ SteerRate : 24|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg/s" Vector__XXX
+
+BO_ 404 CruiseStalk: 4 DSC
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Const_b12 : 12|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ StalkAction : 16|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ DistanceSelect : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ ModeButton : 26|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 470 SteeringWheelButtons: 2 DSC
+ SG_ Button_Phone : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Button_Volume : 2|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Button_Search : 4|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Button_PushToTalk : 8|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Button_Special : 12|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Button_PushToHear : 14|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 473 MDriveButton: 3 DSC
+ SG_ MDriveButton_Inv : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ MDriveButton : 14|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ AliveCounter : 16|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 678 WiperSwitch: 2 DSC
+ SG_ WiperSwitch : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ WiperInterval : 8|3@1+ (1,0) [0|7] "" Vector__XXX
+
+BO_ 168 Engine_Torque1: 8 DME
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ EngineTorque : 12|12@1- (0.5,0) [-1024|1023.5] "Nm" DSC
+ SG_ TorqueInterventionStatus : 24|4@1+ (1,0) [0|15] "" DSC
+ SG_ EngineTorque_Electric : 28|12@1- (0.5,0) [-1024|1023.5] "Nm" DSC
+ SG_ DriveOffReady : 40|2@1+ (1,0) [0|3] "" DSC
+ SG_ EngineFault_ACC : 44|2@1+ (1,0) [0|3] "" DSC
+ SG_ AckShutdown_ACC : 46|2@1+ (1,0) [0|3] "" DSC
+ SG_ Ack_ACC : 48|2@1+ (1,0) [0|3] "" DSC
+ SG_ Ack_ARS : 50|2@1+ (1,0) [0|3] "" DSC
+ SG_ Ack_DSC : 52|2@1+ (1,0) [0|3] "" DSC
+ SG_ Ack_EGS : 54|2@1+ (1,0) [0|3] "" DSC
+ SG_ GearboxOBDStatus : 56|5@1+ (1,0) [0|31] "" DSC
+ SG_ BrakePedalStatus_DME : 61|3@1+ (1,0) [0|7] "" DSC
+
+BO_ 169 Engine_Torque2: 8 DME
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ IdleSpeedStatus : 12|2@1+ (1,0) [0|3] "" DSC
+ SG_ OverrunCutoff : 14|2@1+ (1,0) [0|3] "" DSC
+ SG_ EngineTorque_Min : 16|12@1- (0.5,0) [-1024|1023.5] "Nm" DSC
+ SG_ EngineTorque_Max : 28|12@1- (0.5,0) [-1024|1023.5] "Nm" DSC
+ SG_ EngineTorque_ReserveNeg : 40|12@1- (0.5,0) [-1024|1023.5] "Nm" DSC
+ SG_ EngineTorque_ReservePos : 52|12@1- (0.5,0) [-1024|1023.5] "Nm" DSC
+
+BO_ 170 Engine_Torque3: 8 DME
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ DriverTorque : 12|12@1- (0.5,0) [-1024|1023.5] "Nm" DSC
+ SG_ AccelPedal : 24|8@1+ (0.39063,0) [0|99.61065] "%" DSC
+ SG_ EngineSpeed : 32|16@1+ (0.25,0) [0|16383.75] "rpm" DSC
+ SG_ EngineSpeedError : 48|2@1+ (1,0) [0|3] "" DSC
+ SG_ IdleStatus : 50|2@1+ (1,0) [0|3] "" DSC
+ SG_ PedalCruiseState : 52|4@1+ (1,0) [0|15] "" DSC
+ SG_ FuelQuantity : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 172 WheelTorque_Drivetrain2: 8 DME
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ Field_b32 : 32|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Field_b48 : 48|16@1+ (1,0) [0|65535] "" DSC
+
+BO_ 180 WheelTorque_Drivetrain1: 8 DME
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ Field_b12 : 12|12@1+ (1,0) [0|4095] "" DSC
+ SG_ Field_b24 : 24|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Field_b40 : 40|12@1+ (1,0) [0|4095] "" DSC
+ SG_ Field_b56 : 56|3@1+ (1,0) [0|7] "" DSC
+ SG_ Field_b59 : 59|5@1+ (1,0) [0|31] "" DSC
+
+BO_ 186 Gearbox: 8 EGS
+ SG_ Gear : 0|4@1+ (1,0) [0|15] "" DSC
+ SG_ GearSourceFlag : 4|2@1+ (1,0) [0|3] "" DSC
+ SG_ ConverterClutch : 6|2@1+ (1,0) [0|3] "" DSC
+ SG_ DrivetrainRatio : 8|12@1+ (1,0) [0|4095] "" DSC
+ SG_ OutputShaftSpeed : 24|16@1- (0.125,0) [-4096|4095.875] "rpm" DSC
+ SG_ Checksum : 40|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|15] "" DSC
+ SG_ GearboxMode : 52|3@1+ (1,0) [0|7] "" DSC
+ SG_ HydraulicPumpActive : 56|2@1+ (1,0) [0|3] "" DSC
+ SG_ GearFlag : 62|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 213 BrakeTorqueRequest: 6 LDM
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ Field_b12 : 12|12@1+ (1,0) [0|4095] "" DSC
+ SG_ Field_b24 : 24|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Field_b40 : 40|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 304 TerminalStatus: 5 CAS
+ SG_ Terminal_R : 0|2@1+ (1,0) [0|3] "" DSC
+ SG_ Terminal_15 : 2|2@1+ (1,0) [0|3] "" DSC
+ SG_ Terminal_50 : 4|2@1+ (1,0) [0|3] "" DSC
+ SG_ KeyValid : 6|2@1+ (1,0) [0|3] "" DSC
+ SG_ KeyNumber : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ KeyType : 12|4@1+ (1,0) [0|15] "" DSC
+ SG_ KeyInserted : 16|2@1+ (1,0) [0|3] "" DSC
+ SG_ ImmobiliserStatus : 18|2@1+ (1,0) [0|3] "" DSC
+ SG_ SteeringLockStatus : 20|2@1+ (1,0) [0|3] "" DSC
+ SG_ IgnitionOff : 22|1@1+ (1,0) [0|1] "" DSC
+ SG_ AccessoryOn : 23|1@1+ (1,0) [0|1] "" DSC
+ SG_ Field_b24 : 24|2@1+ (1,0) [0|3] "" DSC
+ SG_ Field_b26 : 26|2@1+ (1,0) [0|3] "" DSC
+ SG_ Field_b28 : 28|2@1+ (1,0) [0|3] "" DSC
+ SG_ AliveCounter : 32|4@1+ (1,0) [0|15] "" DSC
+ SG_ Checksum : 36|4@1+ (1,0) [0|15] "" DSC
+
+BO_ 436 Cluster_Status: 8 KOMBI
+ SG_ DisplayedSpeed : 0|12@1+ (0.1,0) [0|409.5] "km/h" DSC
+ SG_ SpeedUnit : 12|2@1+ (1,0) [0|3] "" DSC
+ SG_ Field_b16 : 16|2@1+ (1,0) [0|3] "" DSC
+ SG_ CruiseInterfaceStatus : 18|3@1+ (1,0) [0|7] "" DSC
+ SG_ AliveCounter : 24|4@1+ (1,0) [0|15] "" DSC
+ SG_ EngineWarningLamp : 36|2@1+ (1,0) [0|3] "" DSC
+ SG_ HandbrakeActive : 41|1@1+ (1,0) [0|1] "" DSC
+ SG_ Field_b48 : 48|7@1+ (1,0) [0|127] "" DSC
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 550 RainSensor: 5 FZD
+ SG_ RainState : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ ModeWord : 8|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Selector : 24|4@1+ (1,0) [0|15] "" DSC
+
+BO_ 740 TrailerStatus: 2 AHM
+ SG_ Trailer : 0|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 776 Status_MSA: 3 DME
+ SG_ Checksum : 0|4@1+ (1,0) [0|15] "" DSC
+ SG_ AliveCounter : 4|4@1+ (1,0) [0|15] "" DSC
+ SG_ Mode5 : 8|2@1+ (1,0) [0|3] "" DSC
+ SG_ Mode4 : 10|2@1+ (1,0) [0|3] "" DSC
+ SG_ Mode3 : 12|2@1+ (1,0) [0|3] "" DSC
+ SG_ Mode2 : 14|2@1+ (1,0) [0|3] "" DSC
+ SG_ Mode1 : 16|2@1+ (1,0) [0|3] "" DSC
+ SG_ Mode6 : 18|2@1+ (1,0) [0|3] "" DSC
+ SG_ Mode7 : 20|4@1+ (1,0) [0|15] "" DSC
+
+BO_ 784 OutsideTemp_Time: 7 KOMBI
+ SG_ OutsideTemp : 0|8@1+ (0.5,-40) [-40|87.5] "degC" DSC
+ SG_ RelativeTime : 8|32@1+ (1,0) [0|4294967295] "s" DSC
+ SG_ DayCounter : 40|16@1+ (1,0) [0|65535] "" DSC
+
+BO_ 790 Button_DTC: 2 JBBF
+ SG_ ButtonState : 0|2@1+ (1,0) [0|3] "" DSC
+ SG_ Fill_b2 : 2|14@1+ (1,0) [0|16383] "" DSC
+
+BO_ 793 Button_RDC: 2 JBBF
+ SG_ ButtonState : 0|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 816 Mileage_Range: 8 KOMBI
+ SG_ Odometer : 0|24@1+ (1,0) [0|16777215] "km" DSC
+ SG_ FuelLevel : 24|8@1+ (1,0) [0|255] "l" DSC
+ SG_ FuelLevel_Left : 32|8@1+ (0.5,0) [0|127.5] "l" DSC
+ SG_ FuelLevel_Right : 40|8@1+ (0.5,0) [0|127.5] "l" DSC
+ SG_ FuelReserveStatus : 48|2@1+ (1,0) [0|3] "" DSC
+ SG_ Range : 52|12@1+ (1,0) [0|4095] "km" DSC
+
+BO_ 896 VIN: 7 CAS
+ SG_ VIN_1 : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ VIN_2 : 8|8@1+ (1,0) [0|255] "" DSC
+ SG_ VIN_3 : 16|8@1+ (1,0) [0|255] "" DSC
+ SG_ VIN_4 : 24|8@1+ (1,0) [0|255] "" DSC
+ SG_ VIN_5 : 32|8@1+ (1,0) [0|255] "" DSC
+ SG_ VIN_6 : 40|8@1+ (1,0) [0|255] "" DSC
+ SG_ VIN_7 : 48|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 904 VehicleType: 7 CAS
+ SG_ VehicleType : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ BodyType : 8|8@1+ (1,0) [0|255] "" DSC
+ SG_ Cylinders : 16|4@1+ (1,0) [0|15] "" DSC
+ SG_ Gears : 20|4@1+ (1,0) [0|15] "" DSC
+ SG_ EngineType : 24|4@1+ (1,0) [0|15] "" DSC
+ SG_ SteeringSide : 28|4@1+ (1,0) [0|15] "" DSC
+ SG_ GearboxType : 32|4@1+ (1,0) [0|15] "" DSC
+ SG_ PowerClass : 36|2@1+ (1,0) [0|3] "" DSC
+ SG_ Country : 40|8@1+ (1,0) [0|255] "" DSC
+ SG_ Displacement : 48|8@1+ (100,0) [0|25500] "ccm" DSC
+
+BO_ 920 ChassisControls: 2 CCC
+ SG_ TyreResetRequest : 4|2@1+ (1,0) [0|3] "" DSC
+ SG_ DscModeRequest : 10|3@1+ (1,0) [0|7] "" DSC
+
+BO_ 921 Status_MDrive: 5 DME
+ SG_ Checksum : 0|4@1+ (1,0) [0|15] "" DSC
+ SG_ AliveCounter : 4|4@1+ (1,0) [0|15] "" DSC
+ SG_ MDriveState : 8|2@1+ (1,0) [0|3] "" DSC
+ SG_ DscModeConfigured : 10|3@1+ (1,0) [0|7] "" DSC
+
+BO_ 944 ReverseGear: 2 FRMFA
+ SG_ Reverse : 0|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 1152 NM_Other: 8 Vector__XXX
+ SG_ NM_Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" DSC
+
+BO_ 1408 CBS_Service: 8 Vector__XXX
+ SG_ CBS_Kind : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ CBS_Item : 8|16@1+ (1,0) [0|65535] "" DSC
+ SG_ CBS_Value : 24|8@1+ (1,0) [0|255] "" DSC
+ SG_ CBS_Count : 32|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 1777 Diag_Request: 8 Tester
+ SG_ TargetAddress : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ TP_Data : 8|56@1+ (1,0) [0|7.205759404e+16] "" DSC
+
+BO_ 1943 CCP_CRO: 8 Tester
+ SG_ CRO_Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" DSC
+
+CM_ "BMW E9x M3 ABS/DSC module (Continental MK60E5, software 7846816A). Node DSC = this module. Every frame of the firmware's message tables is listed with every field: fields the firmware discards and transmitted fields with a fixed value are included and say so. Scaling is given where it is established; other fields are raw. Derived from the decompiled firmware, not from a bus capture. Byte/bit numbering 0-based, little-endian (Intel). Fault references are the BMW DTC numbers. Bus: PT-CAN (powertrain CAN, 500 kbit/s). 0x0C8, 0x194, 0x1D6, 0x1D9 and 0x2A6 are F-CAN frames the DSC forwards to this bus. The table's gateway record (ID 0x111) is the mailbox those frames go out through and is left out.";
+CM_ BO_ 182 "Engine torque request from DSC to the engine ECU (BMW: Drehmomentanforderung DSC). Carries the ASR/MSR/AYC torque targets from traction control, with checksum and alive counter. Sent by this module, every 20 ms.";
+CM_ BO_ 191 "Drivetrain wheel-torque request (BMW: Anforderung Radmoment Antriebsstrang, an LDM/cruise function). This firmware never requests torque here: every field is sent as all ones (not available), only the checksum and alive counter are live. Not observed on the bus with the M3 coding in the simulator. Sent by this module, every 20 ms.";
+CM_ BO_ 196 "Steering wheel angle relayed by DSC (BMW: Lenkradwinkel). The angle, rate and status come from the steering-angle sensor on F-CAN (0x0C9). No checksum or alive counter. Sent by this module, every 10 ms.";
+CM_ BO_ 206 "The four wheel speeds (BMW: Radgeschwindigkeit). Signed: negative while the wheel direction is known and backward. Magnitude limited to 300 km/h; 0 at or below the standstill threshold. The same frame is sent on F-CAN every 10 ms. Sent by this module, every 20 ms.";
+CM_ BO_ 225 "Brake wheel torque (BMW: Radmoment Bremse). This firmware sends constants only (all fields not available); only the checksum and alive counter are live. Not observed on the bus with the M3 coding in the simulator. Sent by this module, every 20 ms.";
+CM_ BO_ 403 "Cruise-control display frame (BMW: Anzeige ACC DCC, an LDM/cruise function). This firmware sends every field as all ones (not available), including the setpoint speed; only the alive counter and the 4-bit checksum are live. Not observed on the bus with the M3 coding in the simulator. Sent by this module, event-driven.";
+CM_ BO_ 414 "Main DSC status frame (BMW: Status DSC): which control is active, ABS and DSC state, brake switch, brake applied, master-cylinder pressure. The alive counter steps once per 210 ms, not per frame. Sent by this module, every 20 ms.";
+CM_ BO_ 416 "Vehicle speed, accelerations and yaw rate (BMW: Geschwindigkeit). Sent by this module, every 20 ms.";
+CM_ BO_ 419 "Raw longitudinal acceleration and its learned zero offset, fine resolution. The corrected value is AccelLongRaw - AccelLongOffset. The module also receives a 2-byte 0x1A3 (ACC long-term frame, DTC D35D) and discards it; a DBC holds one message per ID, so only the TX layout is given. Sent by this module, every 20 ms.";
+CM_ BO_ 422 "Distance pulses (BMW: Wegstrecke): rolling wheel-sensor edge counters and the time they were counted over. A receiver takes the differences between frames. The counters restart on a distance reset. Sent by this module, every 100 ms.";
+CM_ BO_ 690 "Wheel brake pressures, brake-pad wear stages, a slewed yaw rate and the hill-hold, brake pre-fill and disc-drying states. Sent by this module, every 20 ms.";
+CM_ BO_ 691 "Raw longitudinal acceleration and its learned zero offset, coarse resolution, offset binary (raw 2048 = 0). Same values as 0x1A3. Sent by this module, every 50 ms.";
+CM_ BO_ 797 "Flat-tyre indicator (RPA) state for the instrument cluster. Sent on request, as part of the reset handshake started by the RDC button (0x319 / 0x398). Sent by this module, event-driven.";
+CM_ BO_ 884 "Learned wheel (tyre) tolerance trims (BMW: Radtoleranzabgleich). Each value is the wheel's rolling-radius correction relative to the largest wheel, so in practice 0 or negative. The same frame is sent on F-CAN. Sent by this module, every 1000 ms.";
+CM_ BO_ 1193 "Network management frame of the DSC (OSEK-style NM, node 0x29; ID = 0x480 + node). Sent by this module, event-driven.";
+CM_ BO_ 1449 "Check-control and service (CBS) messages to the instrument cluster, and frame requests. The meaning of bytes 3..7 depends on Kind. Sent by this module, event-driven.";
+CM_ BO_ 1577 "Diagnostic response to the tester (KWP2000 over BMW's ISO-TP-like transport; DSC address 0x29, ID = 0x600 + address). Sent by this module, event-driven.";
+CM_ BO_ 1944 "CCP data transmission object (DTO): replies to CCP commands and DAQ (measurement) lists. Only active in diagnostic state 4 (CCP switched on). Sent by this module, event-driven.";
+CM_ BO_ 200 "Steering wheel angle frame of the steering-column module. The DSC does not evaluate it. Sent by the steering-column module (SZL) on F-CAN and forwarded unchanged to this bus by the DSC. Sent by this module, event-driven.";
+CM_ BO_ 404 "Cruise-control stalk. The DSC does not evaluate it; sent faster while the stalk is operated. Sent by the steering-column module (SZL) on F-CAN and forwarded unchanged to this bus by the DSC. Sent by this module, event-driven.";
+CM_ BO_ 470 "Steering-wheel audio and telephone buttons. The DSC does not evaluate them. Sent by the steering-column module (SZL) on F-CAN and forwarded unchanged to this bus by the DSC. Sent by this module, event-driven.";
+CM_ BO_ 473 "Steering-wheel M-Drive button. The DSC does not evaluate it. Sent by the steering-column module (SZL) on F-CAN and forwarded unchanged to this bus by the DSC. Sent by this module, event-driven.";
+CM_ BO_ 678 "Wiper switch. The DSC evaluates the F-CAN copy (brake-disc drying). It also has a receive record for this ID on this bus whose fields it discards. Sent by the steering-column module (SZL) on F-CAN and forwarded unchanged to this bus by the DSC. Sent by this module, event-driven.";
+CM_ BO_ 168 "Engine ECU torque frame 1 (BMW: Drehmoment 1): delivered engine torque and engine status. Checksum and alive counter are supervised (15 or a repeated counter is an error); a timeout, alive or checksum error marks the values invalid and is reported as DTC D354. Received by this module, every 10 ms.";
+CM_ BO_ 169 "Engine ECU torque frame 2 (BMW: Drehmoment 2). Only the minimum (drag) torque is used; the other fields are read and discarded. Checksum and alive counter are supervised; errors are reported as DTC D355. Received by this module, every 20 ms.";
+CM_ BO_ 170 "Engine ECU torque frame 3 (BMW: Drehmoment 3): driver's torque demand, accelerator pedal, engine speed and pedal/cruise state. Checksum and alive counter are supervised; errors are reported as DTC D356. Received by this module, every 10 ms.";
+CM_ BO_ 172 "Drivetrain wheel torque 2 (BMW: Radmoment Antriebsstrang 2). Received; every field is discarded and the checksum and alive counter are not checked. Received by this module, every 20 ms.";
+CM_ BO_ 180 "Drivetrain wheel torque 1 (BMW: Radmoment Antriebsstrang 1). Received; every field is discarded and the checksum and alive counter are not checked. Received by this module, every 20 ms.";
+CM_ BO_ 186 "Gearbox data (BMW: Getriebedaten). Gear, gear-source flag and one more flag are used, and only when a gearbox (automatic / DCT) is coded; the checksum (byte 5) and alive counter are supervised only then. Errors are reported as DTC D357. Used by AYC, hill-hold and TCS. Received by this module, every 20 ms.";
+CM_ BO_ 213 "Brake wheel-torque request from the cruise module (BMW: Anforderung Radmoment Bremse, DTC D35B). Received; every field is discarded and a timeout has no effect. Received by this module, every 20 ms.";
+CM_ BO_ 304 "Terminal (ignition) status from the car access system (BMW: Klemmenstatus). The source of the ignition state; when it is missing the module falls back to its own terminal-15 input. Checksum and alive counter are supervised; errors are reported as DTC D35A. The frame is also forwarded unchanged to F-CAN. Received by this module, every 100 ms.";
+CM_ BO_ 436 "Instrument cluster status (displayed speed, handbrake). Received; every field is discarded. Received by this module, every 100 ms.";
+CM_ BO_ 550 "Rain sensor / wiper speed, used by brake-disc drying. Values go invalid after 40 s without the frame. Received by this module, every 10000 ms.";
+CM_ BO_ 740 "Trailer status from the trailer module (DTC D377 on timeout). Used by AYC trailer-sway logic, hill-hold and the flat-tyre monitor. Received by this module, every 5000 ms.";
+CM_ BO_ 776 "Engine start/stop (MSA) status. Seven 2- or 4-bit modes; the hill-hold reads modes 1 to 4. Most need MSA coded. 4-bit checksum and alive counter are supervised; errors are reported as DTC D379. Received by this module, every 500 ms.";
+CM_ BO_ 784 "Outside temperature and relative time from the instrument cluster. The temperature feeds the flat-tyre monitor's tyre temperature model (DTC D36E when missing or invalid); DTC D358 on timeout (5 s). Received by this module, every 1000 ms.";
+CM_ BO_ 790 "DSC/DTC button from the junction box. Received by this module, event-driven.";
+CM_ BO_ 793 "Tyre-pressure (RDC/RPA) reset button from the junction box. Received by this module, event-driven.";
+CM_ BO_ 816 "Odometer, fuel level and range from the instrument cluster. Only the odometer is read. DTC D359 on timeout (50 s). Received by this module, every 10000 ms.";
+CM_ BO_ 896 "Vehicle identification number (last seven characters). Compared with the VIN stored in the module; the module can request the frame through 0x5A9. DTC D361 on timeout, 5E1D when invalid, 5E1F when it differs or the module is not initialised. Received by this module, event-driven.";
+CM_ BO_ 904 "Vehicle type (BMW: Fahrzeugtyp). Received; every field is discarded. Received by this module, every 100 ms.";
+CM_ BO_ 920 "Chassis settings from the iDrive controller (BMW: Bedienung Fahrwerk): DSC mode selection and the tyre-monitor reset. Received by this module, event-driven.";
+CM_ BO_ 921 "M-Drive status: whether M-Drive is active and the DSC mode stored in the M-Drive configuration. 4-bit checksum and alive counter are checked; a bad frame is dropped. Received by this module, event-driven.";
+CM_ BO_ 944 "Reverse-gear status from the footwell module. Evaluated only when no automatic gearbox is coded (manual); times out after 5 s (DTC D378). Used by hill-hold in reverse. Received by this module, every 1000 ms.";
+CM_ BO_ 1152 "Network management frames of the other nodes. The module receives the whole range 0x480..0x4FF (sender node = ID - 0x480) through one masked mailbox; a DBC holds one message per ID, so only 0x480 is listed. Received by this module, event-driven.";
+CM_ BO_ 1408 "Service (condition-based service) answers. The module receives the range 0x580..0x5FF through one masked mailbox; a DBC holds one message per ID, so only 0x580 is listed. It uses the brake-pad answers: kinds 0x31 and 0x33 with item 2 (front) or 6 (rear). Received by this module, event-driven.";
+CM_ BO_ 1777 "Diagnostic request from the tester (KWP2000 over BMW's ISO-TP-like transport). The module accepts its own address 0x29 and the functional range 0xD0..0xEF. Known firmware quirk: the DLC is never checked. Received by this module, event-driven.";
+CM_ BO_ 1943 "CCP command receive object (CRO). Commands are handled only in diagnostic state 4 (CCP switched on); download commands never write. The receive record accepts any DLC of 1 or more. Received by this module, event-driven.";
+CM_ SG_ 182 Checksum "Checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits (s + (s >> 8)) & 0xFF.";
+CM_ SG_ 182 AliveCounter "Alive counter, counts 0..14 and wraps; 15 is never sent.";
+CM_ SG_ 182 TorqueTarget "Torque target (BMW: TORQ_TAR_DSC). Converted from the traction controller's 0.1 Nm request and clamped. With a single request this field carries it.";
+CM_ SG_ 182 TorqueTarget_Adj "Second torque target (BMW: TORQ_TAR_ADJR_POS_DSC). With a single request it equals TorqueTarget.";
+CM_ SG_ 182 RequestType "Kind of torque request (BMW: ST_TORQ_TAR_DSC). 3 is never sent.";
+CM_ SG_ 182 AbsAxlePairState "Two ABS motion-state bits (abs_motion_flags bits 3..2); meaning not established.";
+CM_ SG_ 191 Checksum "Checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits (s + (s >> 8)) & 0xFF.";
+CM_ SG_ 191 AliveCounter "Alive counter, counts 0..14 and wraps; 15 is never sent.";
+CM_ SG_ 191 Field_b12 "Fixed value 15 (not available).";
+CM_ SG_ 191 TorqueRequest "Fixed value 0xFFFF (not available). Raw; BMW scaling not confirmed.";
+CM_ SG_ 191 Field_b32 "Fixed value 15 (not available).";
+CM_ SG_ 191 Field_b36 "Fixed value 3 (not available).";
+CM_ SG_ 196 SteerAngle "Steering wheel angle: the F-CAN 0x0C9 angle multiplied by 0x405/1024 (x1.0049). 0.04395 deg per bit is the BMW figure; the firmware does not confirm it.";
+CM_ SG_ 196 SteerAngleStatus "Sensor status: 3 while the 0x0C9 status is flagged invalid, otherwise 0, 1 or 2 from the sensor's status class. The meanings of 1 and 2 are best guesses.";
+CM_ SG_ 196 SteerRate "Steering wheel angle rate, from the sensor's service data (0x0C9 selector 11), same scaling as the angle.";
+CM_ SG_ 196 Const_b40 "Fixed value 0xFF.";
+CM_ SG_ 196 Const_b48 "Fixed value 1.";
+CM_ SG_ 196 Const_b50 "Fixed value 0.";
+CM_ SG_ 206 WheelSpeed_FL "Front-left wheel speed (wheel speed in 0.01 km/h x 4/25).";
+CM_ SG_ 206 WheelSpeed_FR "Front-right wheel speed (wheel speed in 0.01 km/h x 4/25).";
+CM_ SG_ 206 WheelSpeed_RL "Rear-left wheel speed (wheel speed in 0.01 km/h x 4/25).";
+CM_ SG_ 206 WheelSpeed_RR "Rear-right wheel speed (wheel speed in 0.01 km/h x 4/25).";
+CM_ SG_ 225 Checksum "Checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits (s + (s >> 8)) & 0xFF.";
+CM_ SG_ 225 AliveCounter "Alive counter, counts 0..14 and wraps; 15 is never sent.";
+CM_ SG_ 225 Field_b12 "Fixed value 0xFFF (not available).";
+CM_ SG_ 225 Field_b24 "Fixed value 0xFFFF (not available).";
+CM_ SG_ 225 Field_b40 "Fixed value 3.";
+CM_ SG_ 225 Field_b42 "Fixed value 7.";
+CM_ SG_ 225 Field_b45 "Fixed value 7.";
+CM_ SG_ 403 Checksum "4-bit checksum: sum of the payload (checksum nibble as 0) plus the CAN ID, folded to 8 bits and then to 4 (s + (s >> 4)) & 0xF.";
+CM_ SG_ 403 AliveCounter "Alive counter, counts 0..14 and wraps; 15 is never sent.";
+CM_ SG_ 403 SetpointSpeed "Cruise setpoint speed; fixed value 0xFF (not available).";
+CM_ SG_ 403 Field_b16 "Fixed value 3.";
+CM_ SG_ 403 Field_b24 "Fixed value 0xFF.";
+CM_ SG_ 403 Field_b32 "Fixed value 7.";
+CM_ SG_ 403 Field_b40 "Fixed value 7.";
+CM_ SG_ 403 Field_b43 "Fixed value 7.";
+CM_ SG_ 403 Field_b48 "Fixed value 0xFF.";
+CM_ SG_ 403 Field_b56 "Fixed value 0xFF.";
+CM_ SG_ 414 ControlActive "Bit field of the active controls (BMW: ST_CLCTR): bit 0 ABS on the front axle, bit 1 TCS/ASC brake or engine control, bit 2 AYC (yaw) control, bit 3 brake assist / pressure request (HBA), bit 4 MSR (engine drag-torque control), bit 5 EBV. Bits combine. Bit 6 (dyno mode) is never set.";
+CM_ SG_ 414 AbsStatus "ABS state: 2 while the ABS fault is latched or ABS is degraded with the ABS lamp on. Known firmware defect: reports 0 while a stored latch still holds ABS off.";
+CM_ SG_ 414 DscStatus "DSC state (BMW: ST_DSC): 2 defect, 6 supervisor or low voltage, 3 steering-angle sensor not verified, 1 and 4 from the lamp bits (DSC off, MDM), otherwise 0.";
+CM_ SG_ 414 Const_b14 "Fixed value 3.";
+CM_ SG_ 414 Const_b16 "Fixed value 3.";
+CM_ SG_ 414 Const_b18 "Fixed value 3.";
+CM_ SG_ 414 AliveCounter "Alive counter 0..14, stepped every 210 ms.";
+CM_ SG_ 414 TorqueInterventionActive "1 while ASR is active with little torque headroom left (latched while ASR stays active) or while AYC asks for an engine intervention.";
+CM_ SG_ 414 HillHoldPressure "1 while the master-cylinder pressure is above the hill-hold threshold (stock 3.5 bar). 2 and 3 are never sent.";
+CM_ SG_ 414 Const_b28 "Fixed value 3.";
+CM_ SG_ 414 Const_b30 "Fixed value 3.";
+CM_ SG_ 414 Const_b32 "Fixed value 14 (BMW: ST_DCRN_AVL, parking-brake deceleration request).";
+CM_ SG_ 414 Const_b36 "Fixed value 3.";
+CM_ SG_ 414 Const_b38 "Fixed value 3.";
+CM_ SG_ 414 BrakeLightSwitch "Brake light switch. Evaluated only while terminal R from 0x130 is valid and on, otherwise 3. 2 = switch sample invalid with the brake-switch fault set.";
+CM_ SG_ 414 Const_b42 "Fixed value 0.";
+CM_ SG_ 414 DbcStatus "Dynamic brake control state: 3 when the function is not coded, 2 from a latched fault, otherwise 0.";
+CM_ SG_ 414 BrakeApplied "1 when the brake switch is on or any valid wheel pressure is above 6 bar; 0 when the switch is valid and off and a wheel pressure is valid.";
+CM_ SG_ 414 MasterPressure "Master-cylinder pressure in whole bar, limited to 254.";
+CM_ SG_ 414 Checksum "Checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits (s + (s >> 8)) & 0xFF.";
+CM_ SG_ 416 VehicleSpeed "Vehicle speed: mean of the two front wheel speeds, limited to 300 km/h. Known firmware quirk: only the front wheels are summed.";
+CM_ SG_ 416 DrivingDirection "Driving direction state (BMW: ST_VEH_DVCO).";
+CM_ SG_ 416 LongitudinalAccel "Longitudinal acceleration (BMW: ACLH_VEH_LN_DSC): the firmware's value in 0.01 g x 4.";
+CM_ SG_ 416 LateralAccel "Lateral acceleration (BMW: ACLH_VEH_ACRO_DSC), from the sensor cluster, offset-corrected.";
+CM_ SG_ 416 YawRate "Yaw rate (BMW: ANGV_YAW_DSC), from the sensor cluster.";
+CM_ SG_ 416 AliveCounter "Alive counter, counts 0..14 and wraps; 15 is never sent.";
+CM_ SG_ 416 Checksum "Checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits (s + (s >> 8)) & 0xFF.";
+CM_ SG_ 419 AccelLongRaw "Accelerometer ax, not filtered and without the zero offset (0.001 g x 251/256).";
+CM_ SG_ 419 AccelLongOffset "Learned accelerometer zero offset, at most +-0.238 g.";
+CM_ SG_ 419 RawStatus "Status of AccelLongRaw. 1 is never sent.";
+CM_ SG_ 419 OffsetStatus "Status of AccelLongOffset. 1 is never sent.";
+CM_ SG_ 419 AliveCounter "Alive counter, counts 0..14 and wraps; 15 is never sent.";
+CM_ SG_ 419 Checksum "Checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits (s + (s >> 8)) & 0xFF.";
+CM_ SG_ 422 WheelEdges_Rear "Wheel-sensor edge count of the rear axle (rear-left wheel, or rear-right when rear-left is faulted).";
+CM_ SG_ 422 WheelEdges_FL "Wheel-sensor edge count of the front-left wheel.";
+CM_ SG_ 422 WheelEdges_FR "Wheel-sensor edge count of the front-right wheel.";
+CM_ SG_ 422 DistanceTime "Elapsed-time accumulator: adds 40 per 10 ms cycle (0.25 ms per bit), wraps at 12 bits.";
+CM_ SG_ 690 WheelPressure_FL "Front-left wheel brake pressure in whole bar (0.01 bar / 100), limited to 254.";
+CM_ SG_ 690 WheelPressure_FR "Front-right wheel brake pressure in whole bar (0.01 bar / 100), limited to 254.";
+CM_ SG_ 690 WheelPressure_RL "Rear-left wheel brake pressure in whole bar (0.01 bar / 100), limited to 254.";
+CM_ SG_ 690 WheelPressure_RR "Rear-right wheel brake pressure in whole bar (0.01 bar / 100), limited to 254.";
+CM_ SG_ 690 PadWear_Front "Brake-pad wear stage of the front axle (from the front-left wear sensor evaluation): 0, 1, 2; 3 = other.";
+CM_ SG_ 690 PadWear_Rear "Brake-pad wear stage of the rear axle (rear-right): 0, 1, 2; 3 = other.";
+CM_ SG_ 690 YawRateSlewed "Rate-limited yaw rate.";
+CM_ SG_ 690 Const_b48 "Fixed value 0.";
+CM_ SG_ 690 HillHoldState "Hill-hold (start-off assistant) state.";
+CM_ SG_ 690 Const_b53 "Fixed value 0.";
+CM_ SG_ 690 BrakePrefillState "Brake standby (pre-fill on a fast throttle lift) state.";
+CM_ SG_ 690 DiscDryingState "Brake-disc drying state (runs on a wet distance counted while the wipers run).";
+CM_ SG_ 690 Const_b61 "Fixed value 0.";
+CM_ SG_ 691 Checksum "Checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits (s + (s >> 8)) & 0xFF.";
+CM_ SG_ 691 AliveCounter "Alive counter, counts 0..14 and wraps; 15 is never sent.";
+CM_ SG_ 691 AccelLongRaw "Accelerometer ax, not filtered and without the zero offset.";
+CM_ SG_ 691 AccelLongOffset "Learned accelerometer zero offset.";
+CM_ SG_ 691 Status "Status of AccelLongRaw. 1 is never sent.";
+CM_ SG_ 797 TyreMonitorState "Tyre monitor state.";
+CM_ SG_ 797 TyreWarningFlags "0x10 while the tyre check-control message (180) is active, otherwise 0.";
+CM_ SG_ 797 TyreResetHandshake "Reset handshake state 0..2 (retried until the cluster answers).";
+CM_ SG_ 884 TyreTrim_FL "Learned tolerance trim of the front-left wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrim_FR "Learned tolerance trim of the front-right wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrim_RL "Learned tolerance trim of the rear-left wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrim_RR "Learned tolerance trim of the rear-right wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrimStatus "0 after power-up, 1 once the tolerance learner has adapted (low confidence).";
+CM_ SG_ 1193 NM_Data "The 8-byte NM record (destination node, state bits, data).";
+CM_ SG_ 1449 Kind "Message kind.";
+CM_ SG_ 1449 MessageId "Check-control message number (kind 0x40) or CBS item (kinds 0x30/0x32: 2 front pads, 6 rear pads). A frame request puts the requested CAN ID here high byte first (0x380 reads 0x8003).";
+CM_ SG_ 1449 Byte3 "Check-control: bit 0 on, bits 5..2 repeat period, bits 7..6 a request field. CBS A: remaining range, low byte. CBS B: wear rate / 100 (0xFF unknown). Frame request: 0xFF.";
+CM_ SG_ 1449 Byte4 "CBS A: remaining range, high byte (0x80 unknown). CBS B: 0. Otherwise 0xFF.";
+CM_ SG_ 1449 Byte5 "CBS A: 0xF1. CBS B: 0xFE or 0xF0 plus the status. Otherwise 0xFF.";
+CM_ SG_ 1449 Byte6 "CBS A: remaining percent (at most 100; 0xFE not valid, 0xFF unknown). CBS B: 0. Otherwise 0xFF.";
+CM_ SG_ 1449 Byte7 "CBS A: pad replacement count (at most 30; 0xFF unknown). Otherwise 0xFF.";
+CM_ SG_ 1577 TargetAddress "Address of the tester the response goes to.";
+CM_ SG_ 1577 TP_Data "Transport-protocol control byte and data.";
+CM_ SG_ 1944 DTO_Data "CCP DTO: command return message, event or DAQ data.";
+CM_ SG_ 200 SteerAngle "Steering wheel angle (BMW scaling, not verified by the firmware).";
+CM_ SG_ 200 AliveCounter "Alive counter.";
+CM_ SG_ 200 SteerRate "Steering wheel angle rate (BMW scaling, not verified).";
+CM_ SG_ 404 Checksum "BMW 8-bit checksum of the other bytes (without the ID).";
+CM_ SG_ 404 AliveCounter "Alive counter.";
+CM_ SG_ 404 Const_b12 "Always 0xF.";
+CM_ SG_ 404 StalkAction "Cruise stalk action (BMW: OP_PUBU_CCTR_ACC), one-hot.";
+CM_ SG_ 404 DistanceSelect "ACC distance selection.";
+CM_ SG_ 404 ModeButton "Cruise mode button.";
+CM_ SG_ 470 Button_Phone "Telephone button.";
+CM_ SG_ 470 Button_Volume "Volume buttons.";
+CM_ SG_ 470 Button_Search "Search / track buttons.";
+CM_ SG_ 470 Button_PushToTalk "Voice (push-to-talk) button.";
+CM_ SG_ 470 Button_Special "Special-function button.";
+CM_ SG_ 470 Button_PushToHear "Push-to-hear button.";
+CM_ SG_ 473 MDriveButton_Inv "M-Drive button, inverted (byte 0 = 0xFF released, 0xBF pressed).";
+CM_ SG_ 473 MDriveButton "M-Drive button (byte 1 = 0x3F released, 0x7F pressed).";
+CM_ SG_ 473 AliveCounter "Counter 0..15; the frame is sent every 1 s, every 100 ms while pressed.";
+CM_ SG_ 678 WiperSwitch "Wiper switch position. The DSC reads the low 3 bits as the wiper mode (0..3 valid).";
+CM_ SG_ 678 WiperInterval "Interval / rain-sensor sensitivity wheel.";
+CM_ SG_ 168 Checksum "BMW checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits. Checked.";
+CM_ SG_ 168 AliveCounter "Alive counter 0..14. Checked.";
+CM_ SG_ 168 EngineTorque "Delivered engine (combustion) torque (BMW: TORQ_AVL). Stored in 0.1 Nm. Used by TCS/ASR/MSR.";
+CM_ SG_ 168 TorqueInterventionStatus "How the engine executed the DSC torque request (BMW: ST_TORQ_AVL). 0 and 1 normal; 2 and 3 set engine status bits (3 also starts a 500 ms timeout); other values mark the status invalid.";
+CM_ SG_ 168 EngineTorque_Electric "BMW: TORQ_AVL_DMEE. Not read by this module.";
+CM_ SG_ 168 DriveOffReady "Engine flag the hill-hold reads as drive-off readiness: 0 or 1 is stored, other values mark it invalid.";
+CM_ SG_ 168 EngineFault_ACC "BMW: ST_DMEA_SWO. Not read by this module.";
+CM_ SG_ 168 AckShutdown_ACC "BMW: RCPT_ACC_SWO_SYS_DME. Not read by this module.";
+CM_ SG_ 168 Ack_ACC "BMW: ST_RCPT_ENG_ACC. Not read by this module.";
+CM_ SG_ 168 Ack_ARS "BMW: ST_RCPT_ENG_ARS. Not read by this module.";
+CM_ SG_ 168 Ack_DSC "Engine's acknowledgement of the DSC request (BMW: ST_RCPT_ENG_DSC): any non-zero value starts a 500 ms timeout.";
+CM_ SG_ 168 Ack_EGS "BMW: ST_RCPT_ENG_EGS. Not read by this module.";
+CM_ SG_ 168 GearboxOBDStatus "BMW: ST_OBD_CTFN_GRB. Not read by this module.";
+CM_ SG_ 168 BrakePedalStatus_DME "BMW: ST_CT_BRPD_DME. Read and discarded.";
+CM_ SG_ 169 Checksum "BMW checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits. Checked.";
+CM_ SG_ 169 AliveCounter "Alive counter 0..14. Checked.";
+CM_ SG_ 169 IdleSpeedStatus "BMW: ST_SW_LEV_RPM. Discarded.";
+CM_ SG_ 169 OverrunCutoff "BMW: ST_INFS. Discarded.";
+CM_ SG_ 169 EngineTorque_Min "Minimum (drag) engine torque (BMW: TORQ_AVL_MIN). Stored negated in 0.1 Nm as the drag torque. Used by MSR.";
+CM_ SG_ 169 EngineTorque_Max "BMW: TORQ_AVL_MAX. Discarded.";
+CM_ SG_ 169 EngineTorque_ReserveNeg "BMW: TORQ_AVL_SPAR_NEG. Discarded.";
+CM_ SG_ 169 EngineTorque_ReservePos "BMW: TORQ_AVL_SPAR_POS. Discarded.";
+CM_ SG_ 170 Checksum "BMW checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits. Checked.";
+CM_ SG_ 170 AliveCounter "Alive counter 0..14. Checked.";
+CM_ SG_ 170 DriverTorque "Driver's requested torque before the DSC interventions (BMW: TORQ_DVCH). Stored in 0.1 Nm. ASR/AYC compare it with their torque ceiling.";
+CM_ SG_ 170 AccelPedal "Accelerator pedal (BMW: ANG_ACPD). Stored raw; the percent scale is the BMW figure, not confirmed by the firmware. 0xFF is invalid and starts a 500 ms timeout.";
+CM_ SG_ 170 EngineSpeed "Engine speed (BMW: RPM_ENG). Stored as raw / 2 (0.5 rpm).";
+CM_ SG_ 170 EngineSpeedError "Any non-zero value marks the engine speed invalid (BMW: RPM_ENG_ERR).";
+CM_ SG_ 170 IdleStatus "BMW: ST_IDLG_ENG. Read and discarded.";
+CM_ SG_ 170 PedalCruiseState "Pedal and cruise-control state (BMW: ST_CLCTR_V). 15 is replaced by 8. Read by the brake standby (pre-fill) function.";
+CM_ SG_ 170 FuelQuantity "BMW: RQAM_FU. Not read by this module.";
+CM_ SG_ 172 Checksum "BMW checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits. Not checked.";
+CM_ SG_ 172 AliveCounter "Alive counter. Discarded.";
+CM_ SG_ 172 Field_b32 "Discarded.";
+CM_ SG_ 172 Field_b48 "Discarded.";
+CM_ SG_ 180 Checksum "BMW checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits. Not checked.";
+CM_ SG_ 180 AliveCounter "Alive counter. Discarded.";
+CM_ SG_ 180 Field_b12 "Discarded.";
+CM_ SG_ 180 Field_b24 "Discarded.";
+CM_ SG_ 180 Field_b40 "Discarded.";
+CM_ SG_ 180 Field_b56 "Discarded.";
+CM_ SG_ 180 Field_b59 "Discarded.";
+CM_ SG_ 186 Gear "Gear (BMW: ST_GR_GRB). 0, 4 and 12..15 are invalid.";
+CM_ SG_ 186 GearSourceFlag "Selects the gear source (BMW: ST_GRLV_ACV, shift active): 0 or 1 valid, 2 and 3 invalid.";
+CM_ SG_ 186 ConverterClutch "BMW: ST_CCLT. Discarded.";
+CM_ SG_ 186 DrivetrainRatio "BMW: GRDT_REIN. Discarded. Raw; the BMW unit is not confirmed.";
+CM_ SG_ 186 OutputShaftSpeed "Gearbox output shaft speed. Discarded.";
+CM_ SG_ 186 Checksum "BMW checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits. In byte 5. Checked with a gearbox coded.";
+CM_ SG_ 186 AliveCounter "Alive counter 0..14; 15 or a repeat is an error. Checked with a gearbox coded.";
+CM_ SG_ 186 GearboxMode "BMW: ST_MOD_GRB. Not read by this module.";
+CM_ SG_ 186 HydraulicPumpActive "BMW: ST_HYPP_ACV. Not read by this module.";
+CM_ SG_ 186 GearFlag "Gear flag: 0 or 1 is stored, 2 and 3 invalid. Meaning not established.";
+CM_ SG_ 213 Checksum "BMW checksum: sum of the other payload bytes plus the CAN ID, folded to 8 bits. Discarded.";
+CM_ SG_ 213 AliveCounter "Alive counter. Discarded.";
+CM_ SG_ 213 Field_b12 "Discarded.";
+CM_ SG_ 213 Field_b24 "Discarded.";
+CM_ SG_ 213 Field_b40 "Discarded.";
+CM_ SG_ 304 Terminal_R "Terminal R (BMW: ST_KL_R): 0 off, 1 on, 2 and 3 invalid.";
+CM_ SG_ 304 Terminal_15 "Terminal 15, ignition (BMW: ST_KL_15): 0 off, 1 on, 2 and 3 invalid.";
+CM_ SG_ 304 Terminal_50 "Terminal 50, starter (BMW: ST_KL_50): 1 on, 0 and 2 off, 3 invalid.";
+CM_ SG_ 304 KeyValid "BMW: ST_KEY_VLD. Not read by this module.";
+CM_ SG_ 304 KeyNumber "BMW: NO_KEY. Not read by this module.";
+CM_ SG_ 304 KeyType "BMW: ST_KEY_TYP. Not read by this module.";
+CM_ SG_ 304 KeyInserted "BMW: ST_KEY_PLGD. Not read by this module.";
+CM_ SG_ 304 ImmobiliserStatus "BMW: ST_VHIM. Not read by this module.";
+CM_ SG_ 304 SteeringLockStatus "BMW: ST_LOKG_STCO. Not read by this module.";
+CM_ SG_ 304 IgnitionOff "Not read by this module.";
+CM_ SG_ 304 AccessoryOn "Not read by this module.";
+CM_ SG_ 304 Field_b24 "BMW: PO_ID_PU. Not read by this module.";
+CM_ SG_ 304 Field_b26 "BMW: ST_PSVA_ACV. Not read by this module.";
+CM_ SG_ 304 Field_b28 "BMW: ST_ILK_COD_BM. Not read by this module.";
+CM_ SG_ 304 AliveCounter "Alive counter 0..14; 15 or a repeat drops the frame.";
+CM_ SG_ 304 Checksum "4-bit checksum in the high nibble of byte 4: sum of the payload (checksum nibble as 0) plus the CAN ID, folded to 8 bits and then to 4 (s + (s >> 4)) & 0xF. Checked.";
+CM_ SG_ 436 DisplayedSpeed "Speed shown by the speedometer. Discarded.";
+CM_ SG_ 436 SpeedUnit "Discarded.";
+CM_ SG_ 436 Field_b16 "Discarded.";
+CM_ SG_ 436 CruiseInterfaceStatus "Discarded.";
+CM_ SG_ 436 AliveCounter "Discarded.";
+CM_ SG_ 436 EngineWarningLamp "Discarded.";
+CM_ SG_ 436 HandbrakeActive "Handbrake switch. Discarded.";
+CM_ SG_ 436 Field_b48 "Discarded.";
+CM_ SG_ 436 Checksum "Discarded.";
+CM_ SG_ 550 RainState "Rain / wiper state byte, stored as the disc-drying mode input.";
+CM_ SG_ 550 ModeWord "When this value is 0, the mode follows Selector (1..4 -> 2, 5 and up -> 3, otherwise 0).";
+CM_ SG_ 550 Selector "Selection nibble (wiper speed stage).";
+CM_ SG_ 740 Trailer "Bit 0 is the trailer flag; 3 is invalid.";
+CM_ SG_ 776 Checksum "4-bit checksum: sum of the payload (checksum nibble as 0) plus the CAN ID, folded to 8 bits and then to 4 (s + (s >> 4)) & 0xF. Checked.";
+CM_ SG_ 776 AliveCounter "Alive counter 0..14; 15 or a repeat is an error.";
+CM_ SG_ 776 Mode5 "MSA mode 5: 1 and 2 valid. Needs MSA coded.";
+CM_ SG_ 776 Mode4 "MSA mode 4: 0, 1 and 2 valid. Needs MSA coded.";
+CM_ SG_ 776 Mode3 "MSA mode 3: 1 and 2 valid. Needs MSA coded.";
+CM_ SG_ 776 Mode2 "MSA mode 2: 0, 1 and 2 valid. Needs MSA coded.";
+CM_ SG_ 776 Mode1 "MSA mode 1: 1 is stored as 0 and 2 as 1; other values invalid.";
+CM_ SG_ 776 Mode6 "MSA mode 6: 0, 1 and 2 valid. Needs MSA coded.";
+CM_ SG_ 776 Mode7 "MSA mode 7: any value except 15. Needs MSA coded.";
+CM_ SG_ 784 OutsideTemp "Outside temperature; read by the firmware in 0.1 degC (raw x 5 - 400).";
+CM_ SG_ 784 RelativeTime "Relative time in seconds, stored as the clock.";
+CM_ SG_ 784 DayCounter "Absolute day counter. Not read by this module.";
+CM_ SG_ 790 ButtonState "DSC/DTC button: 0 and 1 valid, other values invalid.";
+CM_ SG_ 790 Fill_b2 "All ones.";
+CM_ SG_ 793 ButtonState "Reset request: 1 starts the tyre-monitor reset handshake answered on 0x31D; other non-zero values are refused.";
+CM_ SG_ 816 Odometer "Odometer.";
+CM_ SG_ 816 FuelLevel "Fuel level. Not read by this module.";
+CM_ SG_ 816 FuelLevel_Left "Fuel level, left tank half. Not read by this module.";
+CM_ SG_ 816 FuelLevel_Right "Fuel level, right tank half. Not read by this module.";
+CM_ SG_ 816 FuelReserveStatus "Not read by this module.";
+CM_ SG_ 816 Range "Remaining range. Not read by this module.";
+CM_ SG_ 896 VIN_1 "VIN character 1 (ASCII). Any 0xFF byte means the VIN is not available.";
+CM_ SG_ 896 VIN_2 "VIN character 2 (ASCII). Any 0xFF byte means the VIN is not available.";
+CM_ SG_ 896 VIN_3 "VIN character 3 (ASCII). Any 0xFF byte means the VIN is not available.";
+CM_ SG_ 896 VIN_4 "VIN character 4 (ASCII). Any 0xFF byte means the VIN is not available.";
+CM_ SG_ 896 VIN_5 "VIN character 5 (ASCII). Any 0xFF byte means the VIN is not available.";
+CM_ SG_ 896 VIN_6 "VIN character 6 (ASCII). Any 0xFF byte means the VIN is not available.";
+CM_ SG_ 896 VIN_7 "VIN character 7 (ASCII). Any 0xFF byte means the VIN is not available.";
+CM_ SG_ 904 VehicleType "Discarded.";
+CM_ SG_ 904 BodyType "Discarded.";
+CM_ SG_ 904 Cylinders "Discarded.";
+CM_ SG_ 904 Gears "Discarded.";
+CM_ SG_ 904 EngineType "Discarded.";
+CM_ SG_ 904 SteeringSide "Discarded.";
+CM_ SG_ 904 GearboxType "Discarded.";
+CM_ SG_ 904 PowerClass "Discarded.";
+CM_ SG_ 904 Country "Discarded.";
+CM_ SG_ 904 Displacement "Discarded.";
+CM_ SG_ 920 TyreResetRequest "Tyre-monitor reset request: 1 starts the reset handshake answered on 0x31D; other non-zero values are refused.";
+CM_ SG_ 920 DscModeRequest "Requested DSC mode; other values are invalid.";
+CM_ SG_ 921 Checksum "4-bit checksum: sum of the payload (checksum nibble as 0) plus the CAN ID, folded to 8 bits and then to 4 (s + (s >> 4)) & 0xF. Checked.";
+CM_ SG_ 921 AliveCounter "Alive counter 0..14; 15 or a repeat drops the frame.";
+CM_ SG_ 921 MDriveState "M-Drive state; selects how DscModeConfigured is used.";
+CM_ SG_ 921 DscModeConfigured "DSC mode of the M-Drive configuration, evaluated only with MDriveState 1 or 2; other values are invalid.";
+CM_ SG_ 944 Reverse "Reverse gear; other values are invalid.";
+CM_ SG_ 1152 NM_Data "NM frame of another node (destination node, state bits, data).";
+CM_ SG_ 1408 CBS_Kind "Kind of answer, an ASCII digit.";
+CM_ SG_ 1408 CBS_Item "Service item the answer is for.";
+CM_ SG_ 1408 CBS_Value "Kind 0x31: wear in percent (above 100 read as 100). Kind 0x33: wear rate / 100 (0xFF invalid, 0 none).";
+CM_ SG_ 1408 CBS_Count "Kind 0x31: pad replacement count (0x1F read as 0xFA, above 0x1F as 0xFF).";
+CM_ SG_ 1777 TargetAddress "Address of the control unit the request is for (0x29 = DSC).";
+CM_ SG_ 1777 TP_Data "Transport-protocol control byte and data.";
+CM_ SG_ 1943 CRO_Data "CCP CRO: command code, counter and parameters.";
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 65535;
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 182 20;
+BA_ "GenMsgCycleTime" BO_ 191 20;
+BA_ "GenMsgCycleTime" BO_ 196 10;
+BA_ "GenMsgCycleTime" BO_ 206 20;
+BA_ "GenMsgCycleTime" BO_ 225 20;
+BA_ "GenMsgCycleTime" BO_ 414 20;
+BA_ "GenMsgCycleTime" BO_ 416 20;
+BA_ "GenMsgCycleTime" BO_ 419 20;
+BA_ "GenMsgCycleTime" BO_ 422 100;
+BA_ "GenMsgCycleTime" BO_ 690 20;
+BA_ "GenMsgCycleTime" BO_ 691 50;
+BA_ "GenMsgCycleTime" BO_ 884 1000;
+BA_ "GenMsgCycleTime" BO_ 168 10;
+BA_ "GenMsgCycleTime" BO_ 169 20;
+BA_ "GenMsgCycleTime" BO_ 170 10;
+BA_ "GenMsgCycleTime" BO_ 172 20;
+BA_ "GenMsgCycleTime" BO_ 180 20;
+BA_ "GenMsgCycleTime" BO_ 186 20;
+BA_ "GenMsgCycleTime" BO_ 213 20;
+BA_ "GenMsgCycleTime" BO_ 304 100;
+BA_ "GenMsgCycleTime" BO_ 436 100;
+BA_ "GenMsgCycleTime" BO_ 550 10000;
+BA_ "GenMsgCycleTime" BO_ 740 5000;
+BA_ "GenMsgCycleTime" BO_ 776 500;
+BA_ "GenMsgCycleTime" BO_ 784 1000;
+BA_ "GenMsgCycleTime" BO_ 816 10000;
+BA_ "GenMsgCycleTime" BO_ 904 100;
+BA_ "GenMsgCycleTime" BO_ 944 1000;
+
+VAL_ 182 TorqueTarget -2048 "NoRequest" ;
+VAL_ 182 TorqueTarget_Adj -2048 "NoRequest" ;
+VAL_ 182 RequestType 0 "None" 1 "Single" 2 "Pair" 3 "Invalid" ;
+VAL_ 196 SteerAngle -32768 "Invalid" ;
+VAL_ 196 SteerAngleStatus 0 "Valid" 1 "NotCalibrated" 2 "StatusInvalid" 3 "NoData" ;
+VAL_ 196 SteerRate -32768 "Invalid" ;
+VAL_ 206 WheelSpeed_FL -32768 "SensorFault" ;
+VAL_ 206 WheelSpeed_FR -32768 "SensorFault" ;
+VAL_ 206 WheelSpeed_RL -32768 "SensorFault" ;
+VAL_ 206 WheelSpeed_RR -32768 "SensorFault" ;
+VAL_ 414 ControlActive 0 "None" 1 "ABS" 2 "ASC" 4 "DSC" 8 "HBA" 16 "MSR" 32 "EBV" ;
+VAL_ 414 AbsStatus 0 "Normal" 2 "OffOrDegraded" ;
+VAL_ 414 DscStatus 0 "On" 1 "Off" 2 "Defect" 3 "SteeringNotVerified" 4 "MDM" 5 "AbsFault" 6 "Undervoltage" 7 "Invalid" ;
+VAL_ 414 TorqueInterventionActive 0 "Inactive" 1 "Active" ;
+VAL_ 414 HillHoldPressure 0 "Below" 1 "Above" ;
+VAL_ 414 BrakeLightSwitch 0 "Off" 1 "On" 2 "Fault" 3 "Invalid" ;
+VAL_ 414 DbcStatus 0 "Available" 2 "Failed" 3 "NotCoded" ;
+VAL_ 414 BrakeApplied 0 "NotBraking" 1 "Braking" 2 "SwitchInvalid" 3 "NoPressureValid" ;
+VAL_ 414 MasterPressure 255 "Invalid" ;
+VAL_ 416 VehicleSpeed 4095 "Invalid" ;
+VAL_ 416 DrivingDirection 0 "Standing" 1 "Forward" 2 "Backward" 3 "MovingUnknown" 7 "Invalid" ;
+VAL_ 416 LongitudinalAccel -2048 "Invalid" ;
+VAL_ 416 LateralAccel -2048 "Invalid" ;
+VAL_ 416 YawRate -2048 "Invalid" ;
+VAL_ 419 AccelLongRaw -2048 "Invalid" ;
+VAL_ 419 AccelLongOffset -2048 "Invalid" ;
+VAL_ 419 RawStatus 0 "Valid" 2 "Invalid" ;
+VAL_ 419 OffsetStatus 0 "Valid" 2 "Invalid" ;
+VAL_ 422 WheelEdges_Rear 65535 "NotAvailable" ;
+VAL_ 422 WheelEdges_FL 65535 "NotAvailable" ;
+VAL_ 422 WheelEdges_FR 65535 "NotAvailable" ;
+VAL_ 422 DistanceTime 4095 "NotAvailable" ;
+VAL_ 690 WheelPressure_FL 255 "Invalid" ;
+VAL_ 690 WheelPressure_FR 255 "Invalid" ;
+VAL_ 690 WheelPressure_RL 255 "Invalid" ;
+VAL_ 690 WheelPressure_RR 255 "Invalid" ;
+VAL_ 690 YawRateSlewed -2048 "Invalid" ;
+VAL_ 690 HillHoldState 0 "Disabled" 1 "Idle" 3 "Holding" 5 "HoldNoCondition" ;
+VAL_ 690 BrakePrefillState 0 "OffOrInhibited" 1 "Armed" 2 "Active" ;
+VAL_ 690 DiscDryingState 0 "OffOrInhibited" 1 "Armed" 2 "Active" ;
+VAL_ 691 AccelLongRaw 4095 "Invalid" ;
+VAL_ 691 AccelLongOffset 4095 "Invalid" ;
+VAL_ 691 Status 0 "Valid" 2 "Invalid" ;
+VAL_ 797 TyreMonitorState 0 "Active" 1 "Failure" 3 "NotReady" ;
+VAL_ 884 TyreTrimStatus 0 "NotLearned" 1 "Learned" ;
+VAL_ 1449 Kind 1 "FrameRequest" 48 "CBS_A" 50 "CBS_B" 64 "CheckControl" ;
+VAL_ 404 StalkAction 0 "None" 1 "TipForward" 2 "PushForward" 4 "TipBack" 8 "PullBack" 16 "TipUpDown" 64 "TipAxialResume" 127 "Invalid" ;
+VAL_ 404 DistanceSelect 0 "None" 1 "TipUp" 2 "TipDown" 3 "Invalid" ;
+VAL_ 404 ModeButton 0 "NotPressed" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_Phone 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_Volume 0 "None" 1 "Down" 2 "Up" 3 "Invalid" ;
+VAL_ 470 Button_Search 0 "None" 1 "Down" 2 "Up" 3 "Invalid" ;
+VAL_ 470 Button_PushToTalk 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_Special 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_PushToHear 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 473 MDriveButton_Inv 0 "Pressed" 1 "NotPressed" ;
+VAL_ 473 MDriveButton 0 "NotPressed" 1 "Pressed" ;
+VAL_ 678 WiperSwitch 0 "None" 1 "IntervalAuto" 2 "Stage1" 3 "Stage2" 8 "TipWipe" 16 "FrontWash" 64 "RearWipe" 128 "RearWash" 255 "Invalid" ;
+VAL_ 678 WiperInterval 0 "Stage1" 1 "Stage2" 2 "Stage3" 4 "Stage4" 7 "Invalid" ;
+VAL_ 168 EngineTorque -2048 "Invalid" ;
+VAL_ 168 TorqueInterventionStatus 0 "Executed" 1 "IgnitionNotExecuted" 2 "InjectionNotExecuted" 3 "NeitherExecuted" 15 "Invalid" ;
+VAL_ 168 EngineFault_ACC 0 "NoError" 1 "Shutdown" ;
+VAL_ 169 OverrunCutoff 0 "NoAction" 1 "CutoffActive" ;
+VAL_ 169 EngineTorque_Min -2048 "Invalid" ;
+VAL_ 170 DriverTorque -2048 "Invalid" ;
+VAL_ 170 AccelPedal 255 "Invalid" ;
+VAL_ 170 EngineSpeed 65535 "Invalid" ;
+VAL_ 170 EngineSpeedError 0 "OK" 1 "SensorDefective" 3 "Invalid" ;
+VAL_ 170 IdleStatus 0 "Idle" 1 "NotIdle" 3 "Invalid" ;
+VAL_ 170 PedalCruiseState 0 "ACC_PedalReleased" 1 "ACC_PedalPressed" 4 "CC_Retard" 5 "CC_Constant" 6 "CC_Resume" 7 "CC_Accelerate" 8 "PedalReleased" 9 "PedalPressed" 10 "PedalOverride" 11 "Kickdown" 15 "Invalid" ;
+VAL_ 186 Gear 1 "N" 2 "R" 3 "P" 5 "Gear1" 6 "Gear2" 7 "Gear3" 8 "Gear4" 9 "Gear5" 10 "Gear6" 11 "Gear7" 15 "Invalid" ;
+VAL_ 186 ConverterClutch 0 "Open" 1 "Controlled" 2 "Closed" 3 "Invalid" ;
+VAL_ 186 DrivetrainRatio 4095 "Invalid" ;
+VAL_ 304 Terminal_R 0 "Off" 1 "On" ;
+VAL_ 304 Terminal_15 0 "Off" 1 "On" ;
+VAL_ 304 Terminal_50 0 "Off" 1 "On" 3 "Invalid" ;
+VAL_ 436 SpeedUnit 0 "kmh" 1 "mph" 3 "Invalid" ;
+VAL_ 550 RainState 255 "Invalid" ;
+VAL_ 550 Selector 15 "Invalid" ;
+VAL_ 740 Trailer 0 "NoTrailer" 1 "Trailer" 3 "Invalid" ;
+VAL_ 784 OutsideTemp 255 "Invalid" ;
+VAL_ 784 RelativeTime 4294967295 "NotSet" ;
+VAL_ 790 ButtonState 0 "NotPressed" 1 "Pressed" ;
+VAL_ 793 ButtonState 0 "NotPressed" 1 "Pressed" ;
+VAL_ 816 Odometer 16777215 "Invalid" ;
+VAL_ 816 FuelLevel 255 "Invalid" ;
+VAL_ 896 VIN_1 255 "Invalid" ;
+VAL_ 896 VIN_2 255 "Invalid" ;
+VAL_ 896 VIN_3 255 "Invalid" ;
+VAL_ 896 VIN_4 255 "Invalid" ;
+VAL_ 896 VIN_5 255 "Invalid" ;
+VAL_ 896 VIN_6 255 "Invalid" ;
+VAL_ 896 VIN_7 255 "Invalid" ;
+VAL_ 904 SteeringSide 1 "LHD" 2 "RHD" ;
+VAL_ 904 GearboxType 1 "Manual" 2 "Automatic" ;
+VAL_ 920 TyreResetRequest 0 "None" 1 "Request" ;
+VAL_ 920 DscModeRequest 0 "DSC_On" 1 "DSC_Off" 4 "MDM" ;
+VAL_ 921 MDriveState 1 "Inactive" 2 "Active" ;
+VAL_ 921 DscModeConfigured 0 "Unchanged" 1 "DSC_Off" 2 "DSC_On" 4 "MDM" ;
+VAL_ 944 Reverse 1 "NotEngaged" 2 "Engaged" ;
+VAL_ 1408 CBS_Kind 49 "PadWear" 51 "WearRate" ;
+VAL_ 1408 CBS_Item 2 "FrontPads" 6 "RearPads" ;

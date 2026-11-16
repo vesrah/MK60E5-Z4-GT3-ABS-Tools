@@ -1,0 +1,445 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DSC SensorCluster SZL AFS Peer
+
+BO_ 128 Sensor_Command: 5 DSC
+ SG_ ClusterYawTestRequest : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ClusterAccelTestRequest : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ ClusterTestSpare : 2|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Spare_b4 : 4|12@1+ (1,0) [0|4095] "" Vector__XXX
+ SG_ SzlCommand : 16|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ SzlRoutine2F : 18|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ SzlClearAll : 20|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ SzlClearSlots : 21|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Spare_b22 : 22|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ ClusterSupply : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Spare_b26 : 26|6@1+ (1,0) [0|63] "" Vector__XXX
+ SG_ SzlCommandArgument : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 206 WheelSpeeds: 8 DSC
+ SG_ WheelSpeed_FL : 0|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+ SG_ WheelSpeed_FR : 16|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+ SG_ WheelSpeed_RL : 32|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+ SG_ WheelSpeed_RR : 48|16@1- (0.0625,0) [-2048|2047.9375] "km/h" Vector__XXX
+
+BO_ 286 AFS_Interventions: 8 DSC
+ SG_ AbsControlWheels : 0|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ Const_b6 : 6|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AycControlWheels : 8|5@1+ (1,0) [0|31] "" Vector__XXX
+ SG_ Const_b16 : 16|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b18 : 18|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b20 : 20|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b22 : 22|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Const_b24 : 24|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Const_b32 : 32|16@1+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 304 TerminalStatus: 5 DSC
+ SG_ Terminal_R : 0|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Terminal_15 : 2|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Terminal_50 : 4|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ KeyValid : 6|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ KeyNumber : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ KeyType : 12|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ KeyInserted : 16|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ ImmobiliserStatus : 18|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ SteeringLockStatus : 20|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ IgnitionOff : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ AccessoryOn : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ Field_b24 : 24|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Field_b26 : 26|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ Field_b28 : 28|2@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ AliveCounter : 32|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Checksum : 36|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 884 WheelTolerance: 5 DSC
+ SG_ TyreTrim_FL : 0|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrim_FR : 8|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrim_RL : 16|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrim_RR : 24|8@1- (0.1,0) [-12.8|12.7] "%" Vector__XXX
+ SG_ TyreTrimStatus : 32|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 1936 Peer_YawPressure: 8 DSC
+ SG_ Const_b0 : 0|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ YawReference : 16|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ MasterPressure : 32|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ Flags0 : 48|8@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Flags1 : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1937 Peer_SteeringSensors: 8 DSC
+ SG_ SteerAngle : 0|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ LateralAccelSample : 16|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ Word_b32 : 32|16@1+ (1,0) [0|65535] "" Vector__XXX
+ SG_ YawSample : 48|16@1- (1,0) [-32768|32767] "" Vector__XXX
+
+BO_ 1943 Peer_WheelPressureModel: 8 DSC
+ SG_ PressureModel_FL : 0|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ PressureModel_FR : 16|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ PressureModel_RL : 32|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ PressureModel_RR : 48|16@1- (1,0) [-32768|32767] "" Vector__XXX
+
+BO_ 1944 Peer_WheelSpeeds: 8 DSC
+ SG_ WheelSpeed_FL : 0|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ WheelSpeed_FR : 16|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ WheelSpeed_RL : 32|16@1- (1,0) [-32768|32767] "" Vector__XXX
+ SG_ WheelSpeed_RR : 48|16@1- (1,0) [-32768|32767] "" Vector__XXX
+
+BO_ 2004 Conti_Internal_7D4: 8 DSC
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" Vector__XXX
+
+BO_ 2005 Conti_Internal_7D5: 8 DSC
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" Vector__XXX
+
+BO_ 2006 Conti_Internal_7D6: 8 DSC
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" Vector__XXX
+
+BO_ 2007 Conti_Internal_7D7: 8 DSC
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" Vector__XXX
+
+BO_ 2008 Conti_Internal_7D8: 8 DSC
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" Vector__XXX
+
+BO_ 200 SteeringAngle_SZL: 8 SZL
+ SG_ SteerAngle : 0|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg" DSC
+ SG_ AliveCounter : 20|4@1+ (1,0) [0|15] "" DSC
+ SG_ SteerRate : 24|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg/s" DSC
+
+BO_ 201 SteeringAngle_DSC: 8 SZL
+ SG_ SteerAngle : 0|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg" DSC
+ SG_ SteerAngleStatus : 16|2@1+ (1,0) [0|3] "" DSC
+ SG_ Status_b18 : 18|2@1+ (1,0) [0|3] "" DSC
+ SG_ AliveCounter : 20|4@1+ (1,0) [0|15] "" DSC
+ SG_ SteerAngle_Check : 24|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ SensorState : 40|2@1+ (1,0) [0|3] "" DSC
+ SG_ Status_b42 : 42|2@1+ (1,0) [0|3] "" DSC
+ SG_ ServiceDataSelector M : 44|4@1+ (1,0) [0|15] "" DSC
+ SG_ SensorIdentityLow m0 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ SensorIdentityHigh m1 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ SensorStatus m2 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ SensorFaultCode m3 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ ServiceWord8 m8 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ ServiceWord9 m9 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ ServiceBytes10 m10 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ SteerRateRaw m11 : 48|16@1+ (1,0) [0|65535] "" DSC
+ SG_ CalibrationByte m12 : 48|16@1+ (1,0) [0|65535] "" DSC
+
+BO_ 205 Cluster_A: 8 SensorCluster
+ SG_ YawRate : 0|16@1- (0.0028648,0) [-93.8737664|93.8709016] "deg/s" DSC
+ SG_ Word1 : 16|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ LateralAccel : 32|16@1- (0.001,0) [-32.768|32.767] "g" DSC
+ SG_ Status_A : 48|2@1+ (1,0) [0|3] "" DSC
+ SG_ Status_B : 50|2@1+ (1,0) [0|3] "" DSC
+ SG_ AliveCounter : 52|4@1+ (1,0) [0|15] "" DSC
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 209 Cluster_B: 8 SensorCluster
+ SG_ Word3 : 0|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ Word4 : 16|16@1- (1,0) [-32768|32767] "" DSC
+ SG_ LongitudinalAccel : 32|16@1- (0.001,0) [-32.768|32.767] "g" DSC
+ SG_ Status_A : 48|2@1+ (1,0) [0|3] "" DSC
+ SG_ Status_B : 50|2@1+ (1,0) [0|3] "" DSC
+ SG_ AliveCounter : 52|4@1+ (1,0) [0|15] "" DSC
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 212 Cluster_Status: 8 SensorCluster
+ SG_ Nibble0_lo : 0|4@1+ (1,0) [0|15] "" DSC
+ SG_ Nibble0_hi : 4|4@1+ (1,0) [0|15] "" DSC
+ SG_ Nibble1_lo : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ Nibble1_hi : 12|4@1+ (1,0) [0|15] "" DSC
+ SG_ Byte2 : 16|8@1+ (1,0) [0|255] "" DSC
+ SG_ Byte3 : 24|8@1+ (1,0) [0|255] "" DSC
+ SG_ Byte4 : 32|8@1+ (1,0) [0|255] "" DSC
+ SG_ Byte5 : 40|8@1+ (1,0) [0|255] "" DSC
+ SG_ StatusFlags : 48|4@1+ (1,0) [0|15] "" DSC
+ SG_ AliveCounter : 52|4@1+ (1,0) [0|15] "" DSC
+ SG_ Checksum : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 280 AFS_Exchange: 8 AFS
+ SG_ WheelSteerAngle : 0|16@1- (0.04395,0) [-1440.1536|1440.10965] "deg" DSC
+ SG_ WheelSteerAngleStatus : 16|2@1+ (1,0) [0|3] "" DSC
+ SG_ Field_b20 : 20|4@1+ (1,0) [0|15] "" DSC
+ SG_ Field_b24 : 24|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Field_b40 : 40|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Field_b56 : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 287 AFS_Status: 8 AFS
+ SG_ Field_b0 : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ Field_b8 : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ Field_b16 : 16|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Field_b32 : 32|16@1+ (1,0) [0|65535] "" DSC
+ SG_ Field_b56 : 56|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 320 Cluster_Type: 2 SensorCluster
+ SG_ ClusterType : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ Byte1 : 8|8@1+ (1,0) [0|255] "" DSC
+
+BO_ 404 CruiseStalk: 4 SZL
+ SG_ Checksum : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ AliveCounter : 8|4@1+ (1,0) [0|15] "" DSC
+ SG_ Const_b12 : 12|4@1+ (1,0) [0|15] "" DSC
+ SG_ StalkAction : 16|8@1+ (1,0) [0|255] "" DSC
+ SG_ DistanceSelect : 24|2@1+ (1,0) [0|3] "" DSC
+ SG_ ModeButton : 26|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 470 SteeringWheelButtons: 2 SZL
+ SG_ Button_Phone : 0|2@1+ (1,0) [0|3] "" DSC
+ SG_ Button_Volume : 2|2@1+ (1,0) [0|3] "" DSC
+ SG_ Button_Search : 4|2@1+ (1,0) [0|3] "" DSC
+ SG_ Button_PushToTalk : 8|2@1+ (1,0) [0|3] "" DSC
+ SG_ Button_Special : 12|2@1+ (1,0) [0|3] "" DSC
+ SG_ Button_PushToHear : 14|2@1+ (1,0) [0|3] "" DSC
+
+BO_ 473 MDriveButton: 3 SZL
+ SG_ MDriveButton_Inv : 6|1@1+ (1,0) [0|1] "" DSC
+ SG_ MDriveButton : 14|1@1+ (1,0) [0|1] "" DSC
+ SG_ AliveCounter : 16|4@1+ (1,0) [0|15] "" DSC
+
+BO_ 678 WiperSwitch: 2 SZL
+ SG_ WiperSwitch : 0|8@1+ (1,0) [0|255] "" DSC
+ SG_ WiperInterval : 8|3@1+ (1,0) [0|7] "" DSC
+
+BO_ 1934 Peer_PressureRequests: 8 Peer
+ SG_ Request_Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" DSC
+
+BO_ 1935 Peer_RequestControl: 8 Peer
+ SG_ RequestValue : 0|14@1+ (1,0) [0|16383] "" DSC
+ SG_ Flags0 : 16|8@1+ (1,0) [0|255] "" DSC
+ SG_ Flags1 : 24|8@1+ (1,0) [0|255] "" DSC
+ SG_ Data_b32 : 32|32@1+ (1,0) [0|4294967295] "" DSC
+
+BO_ 2012 Conti_Internal_7DC: 8 Vector__XXX
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" DSC
+
+BO_ 2013 Conti_Internal_7DD: 8 Vector__XXX
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" DSC
+
+BO_ 2014 Conti_Internal_7DE: 8 Vector__XXX
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" DSC
+
+BO_ 2015 Conti_Internal_7DF: 8 Vector__XXX
+ SG_ Data : 0|64@1+ (1,0) [0|1.844674407e+19] "" DSC
+
+CM_ "BMW E9x M3 ABS/DSC module (Continental MK60E5, software 7846816A). Node DSC = this module. Every frame of the firmware's message tables is listed with every field: fields the firmware discards and transmitted fields with a fixed value are included and say so. Scaling is given where it is established; other fields are raw. Derived from the decompiled firmware, not from a bus capture. Byte/bit numbering 0-based, little-endian (Intel). Fault references are the BMW DTC numbers. Bus: F-CAN (chassis CAN, 500 kbit/s) to the steering-angle sensor and the yaw/acceleration sensor cluster.";
+CM_ BO_ 128 "Commands from DSC to the sensor cluster and the steering-angle sensor (BMW: SYNC, DTC C99B on the receiving side): cluster self-test requests, steering-sensor calibration / coding commands, fault-memory clear and the cluster supply state. Sent from its own time slot every 10 ms. Sent by this module, every 10 ms.";
+CM_ BO_ 206 "The four wheel speeds, same content as PT-CAN 0x0CE (there every 20 ms). Signed: negative while the wheel direction is known and backward. Magnitude limited to 300 km/h. Sent by this module, every 10 ms.";
+CM_ BO_ 286 "Control interventions DSC -> active steering (AFS). In the transmit table with a 10 ms period, but this firmware holds the record off every cycle: never sent (the M3 has no active steering). Sent by this module, event-driven.";
+CM_ BO_ 304 "Terminal (ignition) status: the PT-CAN 0x130 frame of the car access system, forwarded unchanged to F-CAN by the DSC as it is received (about every 100 ms). Sent by this module, event-driven.";
+CM_ BO_ 884 "Learned wheel (tyre) tolerance trims, same content as PT-CAN 0x374. Sent by this module, every 1000 ms.";
+CM_ BO_ 1936 "Peer exchange: yaw reference, master-cylinder pressure and two flag bytes. Part of the peer exchange with an external F-CAN brake-request module, which the stock calibration switches off: not on the bus with the stock image. Sent by this module, event-driven.";
+CM_ BO_ 1937 "Peer exchange: steering angle and sensor samples; 0xFFFF for an invalid value. Part of the peer exchange with an external F-CAN brake-request module, which the stock calibration switches off: not on the bus with the stock image. Sent by this module, event-driven.";
+CM_ BO_ 1943 "Peer exchange: the four modelled wheel pressures (all 0xFF while blanked). Part of the peer exchange with an external F-CAN brake-request module, which the stock calibration switches off: not on the bus with the stock image. Sent by this module, event-driven.";
+CM_ BO_ 1944 "Peer exchange: the four wheel speeds (all 0xFF while blanked). Part of the peer exchange with an external F-CAN brake-request module, which the stock calibration switches off: not on the bus with the stock image. Sent by this module, event-driven.";
+CM_ BO_ 2004 "Continental-internal transmit record of the F-CAN table (event). Not sent in any simulated drive; payload not decoded. Sent by this module, event-driven.";
+CM_ BO_ 2005 "Continental-internal transmit record of the F-CAN table (event). Not sent in any simulated drive; payload not decoded. Sent by this module, event-driven.";
+CM_ BO_ 2006 "Continental-internal transmit record of the F-CAN table (event). Not sent in any simulated drive; payload not decoded. Sent by this module, event-driven.";
+CM_ BO_ 2007 "Continental-internal transmit record of the F-CAN table (event). Not sent in any simulated drive; payload not decoded. Sent by this module, event-driven.";
+CM_ BO_ 2008 "Continental-internal transmit record of the F-CAN table (event). Not sent in any simulated drive; payload not decoded. Sent by this module, event-driven.";
+CM_ BO_ 200 "Steering wheel angle frame of the steering-column module. The DSC does not evaluate it; it forwards the frame unchanged to PT-CAN under the same ID. Together with 0x0C9 it is supervised (DTC D373). Received by this module, event-driven.";
+CM_ BO_ 201 "Steering-angle sensor frame for the DSC: angle, a second (complement) angle, status fields, alive counter and multiplexed service data. The source of the steering angle for AYC and of PT-CAN 0x0C4. No checksum; a repeated alive counter or 15 is an error. Times out after 100 ms (DTC D373); a frame judged implausible does not reload the timeout. Received by this module, event-driven.";
+CM_ BO_ 205 "Yaw/acceleration sensor cluster, channel set A: yaw rate, a supervision word and lateral acceleration, with status, alive counter and CRC-8. The source of yaw and ay. A repeated counter or bad CRC rejects the frame; times out after 100 ms (DTC D370). Received by this module, event-driven.";
+CM_ BO_ 209 "Sensor cluster, channel set B: two supervision words and the longitudinal acceleration, with status, counter and CRC-8. Times out after 100 ms (DTC D371). Received by this module, event-driven.";
+CM_ BO_ 212 "Sensor cluster status: status nibbles, status bytes and the flags with which the cluster answers the self-test requests of 0x080. Times out after 100 ms (DTC D372). Received by this module, event-driven.";
+CM_ BO_ 280 "Active steering (AFS) -> DSC exchange (DTC D375). Received; every field is discarded and a timeout has no effect (the M3 has no active steering). Received by this module, event-driven.";
+CM_ BO_ 287 "Active steering (AFS) status (DTC D376). Received; every field is discarded and a timeout has no effect. Received by this module, event-driven.";
+CM_ BO_ 320 "Sensor cluster identification: one 16-bit value, stored; reception marks the cluster as present. Received by this module, event-driven.";
+CM_ BO_ 404 "Cruise-control stalk. The DSC does not evaluate it; it forwards the frame unchanged to PT-CAN under the same ID. Received by this module, event-driven.";
+CM_ BO_ 470 "Steering-wheel audio and telephone buttons. The DSC does not evaluate it; it forwards the frame unchanged to PT-CAN under the same ID. Received by this module, event-driven.";
+CM_ BO_ 473 "Steering-wheel M-Drive button. The DSC does not evaluate it; it forwards the frame unchanged to PT-CAN under the same ID. Received by this module, event-driven.";
+CM_ BO_ 678 "Wiper switch. Its mode feeds brake-disc drying. Also forwarded unchanged to PT-CAN under the same ID. Received by this module, event-driven.";
+CM_ BO_ 1934 "Peer exchange: four wheel brake-pressure request channels, handed to the pressure arbiter. Part of the peer exchange with an external F-CAN brake-request module, which the stock calibration switches off: not on the bus with the stock image. Received by this module, event-driven.";
+CM_ BO_ 1935 "Peer exchange: request value, flags and per-channel modes. Ten missed frames count a peer error. Part of the peer exchange with an external F-CAN brake-request module, which the stock calibration switches off: not on the bus with the stock image. Received by this module, event-driven.";
+CM_ BO_ 2012 "Continental-internal receive record of the F-CAN table. Payload not decoded. Received by this module, event-driven.";
+CM_ BO_ 2013 "Continental-internal receive record of the F-CAN table. Payload not decoded. Received by this module, event-driven.";
+CM_ BO_ 2014 "Continental-internal receive record of the F-CAN table. Payload not decoded. Received by this module, event-driven.";
+CM_ BO_ 2015 "Continental-internal receive record of the F-CAN table. Payload not decoded. Received by this module, event-driven.";
+CM_ SG_ 128 ClusterYawTestRequest "1 while the yaw-rate self-test of the sensor cluster is requested; the cluster answers in 0x0D4.";
+CM_ SG_ 128 ClusterAccelTestRequest "1 while the acceleration self-test of the sensor cluster is requested; the cluster answers in 0x0D4.";
+CM_ SG_ 128 ClusterTestSpare "Always 0.";
+CM_ SG_ 128 Spare_b4 "Always 0.";
+CM_ SG_ 128 SzlCommand "Steering-sensor command while one is busy: 1 steering-angle calibration (KWP 31 21), 2 write the sensor's coding byte (KWP 2E 30 01). Held until the sensor reports it in 0x0C9 or 26 cycles.";
+CM_ SG_ 128 SzlRoutine2F "2 while the steering-sensor routine 0x2F is requested (after an NM wake-up, a distance reset or a long standstill), otherwise 1.";
+CM_ SG_ 128 SzlClearAll "Set for 5 frames after a full fault-memory clear (KWP 14 FF FF).";
+CM_ SG_ 128 SzlClearSlots "Set for 5 frames after the second fault-memory clear phase (KWP 14 FF FE).";
+CM_ SG_ 128 Spare_b22 "Always 3.";
+CM_ SG_ 128 ClusterSupply "1 once the sensor cluster's supply is up and its start-up silence is over; 2 before that or with the supply low.";
+CM_ SG_ 128 Spare_b26 "Always 0x3F.";
+CM_ SG_ 128 SzlCommandArgument "Argument of SzlCommand: the calibration argument byte or the coding byte, otherwise 0.";
+CM_ SG_ 206 WheelSpeed_FL "Front-left wheel speed.";
+CM_ SG_ 206 WheelSpeed_FR "Front-right wheel speed.";
+CM_ SG_ 206 WheelSpeed_RL "Rear-left wheel speed.";
+CM_ SG_ 206 WheelSpeed_RR "Rear-right wheel speed.";
+CM_ SG_ 286 AbsControlWheels "Bit per wheel (FL, FR, RL, RR) in ABS control.";
+CM_ SG_ 286 Const_b6 "Fixed value 0.";
+CM_ SG_ 286 AycControlWheels "Bit per wheel in yaw-control pressure control.";
+CM_ SG_ 286 Const_b16 "Fixed value 0.";
+CM_ SG_ 286 Const_b18 "Fixed value 0.";
+CM_ SG_ 286 Const_b20 "Fixed value 0.";
+CM_ SG_ 286 Const_b22 "Fixed value 0.";
+CM_ SG_ 286 Const_b24 "Fixed value 0.";
+CM_ SG_ 286 Const_b32 "Fixed value 0.";
+CM_ SG_ 304 Terminal_R "Terminal R.";
+CM_ SG_ 304 Terminal_15 "Terminal 15 (ignition).";
+CM_ SG_ 304 Terminal_50 "Terminal 50 (starter).";
+CM_ SG_ 304 KeyValid "BMW: ST_KEY_VLD.";
+CM_ SG_ 304 KeyNumber "BMW: NO_KEY.";
+CM_ SG_ 304 KeyType "BMW: ST_KEY_TYP.";
+CM_ SG_ 304 KeyInserted "BMW: ST_KEY_PLGD.";
+CM_ SG_ 304 ImmobiliserStatus "BMW: ST_VHIM.";
+CM_ SG_ 304 SteeringLockStatus "BMW: ST_LOKG_STCO.";
+CM_ SG_ 304 IgnitionOff "Ignition off flag.";
+CM_ SG_ 304 AccessoryOn "Accessory on flag.";
+CM_ SG_ 304 Field_b24 "BMW: PO_ID_PU.";
+CM_ SG_ 304 Field_b26 "BMW: ST_PSVA_ACV.";
+CM_ SG_ 304 Field_b28 "BMW: ST_ILK_COD_BM.";
+CM_ SG_ 304 AliveCounter "Alive counter of the car access system.";
+CM_ SG_ 304 Checksum "4-bit checksum of the car access system.";
+CM_ SG_ 884 TyreTrim_FL "Learned tolerance trim of the front-left wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrim_FR "Learned tolerance trim of the front-right wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrim_RL "Learned tolerance trim of the rear-left wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrim_RR "Learned tolerance trim of the rear-right wheel; the wheel speed is scaled by 1 + trim/100.";
+CM_ SG_ 884 TyreTrimStatus "0 after power-up, 1 once the tolerance learner has adapted (low confidence).";
+CM_ SG_ 1936 Const_b0 "Always 0.";
+CM_ SG_ 1936 YawReference "Yaw-rate reference of the sensor monitoring. Raw.";
+CM_ SG_ 1936 MasterPressure "Master-cylinder pressure. Raw (firmware pressure units).";
+CM_ SG_ 1936 Flags0 "Peer transmit flags, byte 0.";
+CM_ SG_ 1936 Flags1 "Peer transmit flags, byte 1.";
+CM_ SG_ 1937 SteerAngle "Steering angle (the firmware's scaled 0x0C9 angle). Raw.";
+CM_ SG_ 1937 LateralAccelSample "Lateral acceleration sample. Raw.";
+CM_ SG_ 1937 Word_b32 "0, or 0xFFFF as an invalid marker.";
+CM_ SG_ 1937 YawSample "Yaw-rate sample. Raw.";
+CM_ SG_ 1943 PressureModel_FL "Modelled front-left wheel pressure. Raw.";
+CM_ SG_ 1943 PressureModel_FR "Modelled front-right wheel pressure. Raw.";
+CM_ SG_ 1943 PressureModel_RL "Modelled rear-left wheel pressure. Raw.";
+CM_ SG_ 1943 PressureModel_RR "Modelled rear-right wheel pressure. Raw.";
+CM_ SG_ 1944 WheelSpeed_FL "Front-left wheel speed. Raw (firmware wheel-speed units).";
+CM_ SG_ 1944 WheelSpeed_FR "Front-right wheel speed. Raw (firmware wheel-speed units).";
+CM_ SG_ 1944 WheelSpeed_RL "Rear-left wheel speed. Raw (firmware wheel-speed units).";
+CM_ SG_ 1944 WheelSpeed_RR "Rear-right wheel speed. Raw (firmware wheel-speed units).";
+CM_ SG_ 2004 Data "Payload, not decoded.";
+CM_ SG_ 2005 Data "Payload, not decoded.";
+CM_ SG_ 2006 Data "Payload, not decoded.";
+CM_ SG_ 2007 Data "Payload, not decoded.";
+CM_ SG_ 2008 Data "Payload, not decoded.";
+CM_ SG_ 200 SteerAngle "Steering wheel angle (BMW scaling, not verified by the firmware).";
+CM_ SG_ 200 AliveCounter "Alive counter.";
+CM_ SG_ 200 SteerRate "Steering wheel angle rate (BMW scaling, not verified).";
+CM_ SG_ 201 SteerAngle "Steering wheel angle (BMW: LW_OBEN). The firmware multiplies it by 0x405/1024 before use; values beyond +-0x7F5E are invalid. 0.04395 deg per bit is the BMW figure.";
+CM_ SG_ 201 SteerAngleStatus "Angle signal status (BMW: LW_OBEN_FEHLER).";
+CM_ SG_ 201 Status_b18 "Status field stored in the steering flags; meaning not established.";
+CM_ SG_ 201 AliveCounter "Alive counter; a repeat or 15 drops the frame (not checked in the first 1.8 s).";
+CM_ SG_ 201 SteerAngle_Check "Second angle for the plausibility check: the word rotated left by 3 and inverted, its top two bits used as sensor flags.";
+CM_ SG_ 201 SensorState "Steering-angle sensor state.";
+CM_ SG_ 201 Status_b42 "Not read by this firmware.";
+CM_ SG_ 201 ServiceDataSelector "Selects what the service-data word at bits 48..63 carries. 4..7 and above 12 are ignored.";
+CM_ SG_ 201 SensorIdentityLow "Service data, selector 0: sensor identity bytes 0 and 1, compared with the identity stored in the module's EEPROM.";
+CM_ SG_ 201 SensorIdentityHigh "Service data, selector 1: sensor identity bytes 2 and 3.";
+CM_ SG_ 201 SensorStatus "Service data, selector 2: sensor status; high byte 0xA0 or 0x00 sets the steering flags, other values are ignored.";
+CM_ SG_ 201 SensorFaultCode "Service data, selector 3: a sensor fault code, mapped to a fault and recorded.";
+CM_ SG_ 201 ServiceWord8 "Service data, selector 8: a nibble-swapped word.";
+CM_ SG_ 201 ServiceWord9 "Service data, selector 9: a nibble-swapped word.";
+CM_ SG_ 201 ServiceBytes10 "Service data, selector 10: two bytes.";
+CM_ SG_ 201 SteerRateRaw "Service data, selector 11: the steering rate; scaled like the angle it becomes SteerRate on PT-CAN 0x0C4.";
+CM_ SG_ 201 CalibrationByte "Service data, selector 12: the sensor's calibration / coding byte.";
+CM_ SG_ 205 YawRate "Yaw rate from the sensor cluster (word 0), 0.5e-4 rad/s per LSB (0.0028648 deg/s). The firmware multiplies it by a sign calibration of -1.";
+CM_ SG_ 205 Word1 "Cluster word 1, stored but not used.";
+CM_ SG_ 205 LateralAccel "Lateral acceleration from the sensor cluster (word 2), 0.001 g per LSB. The firmware multiplies it by a sign calibration of -1.";
+CM_ SG_ 205 Status_A "2-bit status field (stored in the cluster status flags).";
+CM_ SG_ 205 Status_B "2-bit status field (stored in the cluster status flags).";
+CM_ SG_ 205 AliveCounter "Alive counter; a repeated value rejects the frame.";
+CM_ SG_ 205 Checksum "CRC-8 of bytes 0-6 (poly 0x1D); mismatch -> message rejected.";
+CM_ SG_ 209 Word3 "Cluster word 3 (second yaw channel), stored but not used as the yaw rate.";
+CM_ SG_ 209 Word4 "Cluster word 4, stored but not used.";
+CM_ SG_ 209 LongitudinalAccel "Longitudinal acceleration from the sensor cluster (word 5), 0.001 g per LSB with the stock scale calibration, no sign inversion.";
+CM_ SG_ 209 Status_A "2-bit status field (stored in the cluster status flags).";
+CM_ SG_ 209 Status_B "2-bit status field (stored in the cluster status flags).";
+CM_ SG_ 209 AliveCounter "Alive counter; a repeated value rejects the frame.";
+CM_ SG_ 209 Checksum "CRC-8 as 0x0CD.";
+CM_ SG_ 212 Nibble0_lo "Cluster status nibble (stored).";
+CM_ SG_ 212 Nibble0_hi "Cluster status nibble (stored).";
+CM_ SG_ 212 Nibble1_lo "Cluster status nibble (stored).";
+CM_ SG_ 212 Nibble1_hi "Cluster status nibble (stored).";
+CM_ SG_ 212 Byte2 "Cluster status byte (stored; read by the cluster supervision).";
+CM_ SG_ 212 Byte3 "Cluster status byte (stored).";
+CM_ SG_ 212 Byte4 "Cluster status byte (stored).";
+CM_ SG_ 212 Byte5 "Cluster byte 5; possibly the inverted sum of the sensor block (not established).";
+CM_ SG_ 212 StatusFlags "Bit 0 cluster error flag, bit 1 snapshot B trigger, bit 3 snapshot A trigger.";
+CM_ SG_ 212 AliveCounter "Alive counter; a repeated value rejects the frame.";
+CM_ SG_ 212 Checksum "CRC-8 as 0x0CD.";
+CM_ SG_ 280 WheelSteerAngle "Road-wheel steering angle from AFS (BMW: LW_RAD). Discarded.";
+CM_ SG_ 280 WheelSteerAngleStatus "Discarded.";
+CM_ SG_ 280 Field_b20 "Discarded.";
+CM_ SG_ 280 Field_b24 "Discarded.";
+CM_ SG_ 280 Field_b40 "Discarded.";
+CM_ SG_ 280 Field_b56 "Not read by this firmware.";
+CM_ SG_ 287 Field_b0 "Discarded.";
+CM_ SG_ 287 Field_b8 "Discarded.";
+CM_ SG_ 287 Field_b16 "Discarded.";
+CM_ SG_ 287 Field_b32 "Discarded.";
+CM_ SG_ 287 Field_b56 "Not read by this firmware.";
+CM_ SG_ 320 ClusterType "Type of the sensor cluster, as BMW's diagnostics read it.";
+CM_ SG_ 320 Byte1 "Second byte of the stored value; meaning not established.";
+CM_ SG_ 404 Checksum "BMW 8-bit checksum of the other bytes (without the ID).";
+CM_ SG_ 404 AliveCounter "Alive counter.";
+CM_ SG_ 404 Const_b12 "Always 0xF.";
+CM_ SG_ 404 StalkAction "Cruise stalk action (BMW: OP_PUBU_CCTR_ACC), one-hot.";
+CM_ SG_ 404 DistanceSelect "ACC distance selection.";
+CM_ SG_ 404 ModeButton "Cruise mode button.";
+CM_ SG_ 470 Button_Phone "Telephone button.";
+CM_ SG_ 470 Button_Volume "Volume buttons.";
+CM_ SG_ 470 Button_Search "Search / track buttons.";
+CM_ SG_ 470 Button_PushToTalk "Voice (push-to-talk) button.";
+CM_ SG_ 470 Button_Special "Special-function button.";
+CM_ SG_ 470 Button_PushToHear "Push-to-hear button.";
+CM_ SG_ 473 MDriveButton_Inv "M-Drive button, inverted (byte 0 = 0xFF released, 0xBF pressed).";
+CM_ SG_ 473 MDriveButton "M-Drive button (byte 1 = 0x3F released, 0x7F pressed).";
+CM_ SG_ 473 AliveCounter "Counter 0..15; the frame is sent every 1 s, every 100 ms while pressed.";
+CM_ SG_ 678 WiperSwitch "Wiper switch position. The firmware reads the low 3 bits as the wiper mode: 0..3 valid, 4..7 invalid, so the wash and tip values count as mode 0 and 0xFF as invalid.";
+CM_ SG_ 678 WiperInterval "Interval / rain-sensor sensitivity wheel. Not read by this firmware.";
+CM_ SG_ 1934 Request_Data "Four request channels, each a 9-bit value and a 7-bit field; bit layout not decoded here.";
+CM_ SG_ 1935 RequestValue "Request value.";
+CM_ SG_ 1935 Flags0 "Flag byte (bits 3 and 4 ignored).";
+CM_ SG_ 1935 Flags1 "Flag byte (bits 2..5 ignored).";
+CM_ SG_ 1935 Data_b32 "Two values and the per-channel mode and valid bits; not decoded here.";
+CM_ SG_ 2012 Data "Payload, not decoded.";
+CM_ SG_ 2013 Data "Payload, not decoded.";
+CM_ SG_ 2014 Data "Payload, not decoded.";
+CM_ SG_ 2015 Data "Payload, not decoded.";
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 65535;
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 128 10;
+BA_ "GenMsgCycleTime" BO_ 206 10;
+BA_ "GenMsgCycleTime" BO_ 884 1000;
+
+VAL_ 128 SzlCommand 0 "None" 1 "Calibrate" 2 "WriteCoding" ;
+VAL_ 128 SzlRoutine2F 1 "Idle" 2 "Requested" ;
+VAL_ 128 ClusterSupply 1 "Ready" 2 "NotReady" ;
+VAL_ 206 WheelSpeed_FL -32768 "SensorFault" ;
+VAL_ 206 WheelSpeed_FR -32768 "SensorFault" ;
+VAL_ 206 WheelSpeed_RL -32768 "SensorFault" ;
+VAL_ 206 WheelSpeed_RR -32768 "SensorFault" ;
+VAL_ 304 Terminal_R 0 "Off" 1 "On" ;
+VAL_ 304 Terminal_15 0 "Off" 1 "On" ;
+VAL_ 304 Terminal_50 0 "Off" 1 "On" 3 "Invalid" ;
+VAL_ 884 TyreTrimStatus 0 "NotLearned" 1 "Learned" ;
+VAL_ 201 SteerAngle -32768 "Invalid" ;
+VAL_ 201 SteerAngleStatus 0 "OK" 1 "Verifying" 2 "Faulty" 3 "Invalid" ;
+VAL_ 201 ServiceDataSelector 0 "IdentityLow" 1 "IdentityHigh" 2 "Status" 3 "FaultCode" 8 "Word8" 9 "Word9" 10 "Bytes10" 11 "SteerRate" 12 "CalibrationByte" ;
+VAL_ 280 WheelSteerAngleStatus 0 "OK" 1 "Verifying" 2 "Faulty" 3 "Invalid" ;
+VAL_ 320 ClusterType 1 "VDO_Single" 2 "SystronDonner_Single" 3 "SystronDonner_Redundant" 255 "Invalid" ;
+VAL_ 404 StalkAction 0 "None" 1 "TipForward" 2 "PushForward" 4 "TipBack" 8 "PullBack" 16 "TipUpDown" 64 "TipAxialResume" 127 "Invalid" ;
+VAL_ 404 DistanceSelect 0 "None" 1 "TipUp" 2 "TipDown" 3 "Invalid" ;
+VAL_ 404 ModeButton 0 "NotPressed" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_Phone 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_Volume 0 "None" 1 "Down" 2 "Up" 3 "Invalid" ;
+VAL_ 470 Button_Search 0 "None" 1 "Down" 2 "Up" 3 "Invalid" ;
+VAL_ 470 Button_PushToTalk 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_Special 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 470 Button_PushToHear 0 "None" 1 "Pressed" 3 "Invalid" ;
+VAL_ 473 MDriveButton_Inv 0 "Pressed" 1 "NotPressed" ;
+VAL_ 473 MDriveButton 0 "NotPressed" 1 "Pressed" ;
+VAL_ 678 WiperSwitch 0 "None" 1 "IntervalAuto" 2 "Stage1" 3 "Stage2" 8 "TipWipe" 16 "FrontWash" 64 "RearWipe" 128 "RearWash" 255 "Invalid" ;
+VAL_ 678 WiperInterval 0 "Stage1" 1 "Stage2" 2 "Stage3" 4 "Stage4" 7 "Invalid" ;

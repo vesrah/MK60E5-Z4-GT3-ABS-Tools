@@ -26,8 +26,14 @@ The GT3 software runs with no steering-angle sensor by default, and treats yaw a
 ### CAN databases (DBC)
 The [`dbc/`](dbc/) folder has DBC files for datalogging and bus work:
 
-- `z4_gt3_dsc_6769162_main.dbc` - the main bus (what you tap on PT-CAN for datalogging): 20 messages, including the four wheel speeds, the wheel pressures, the Brake 1/2/3 status and lamp messages, the engine-torque requests, and the `0x5BA` config message.
-- `z4_gt3_dsc_6769162_fcan.dbc` - the F-CAN sensor-cluster bus: 4 messages carrying yaw rate and lateral/longitudinal acceleration from the yaw sensor.
+- `z4_gt3_mk60e5_dsc_6769162_ptcan.dbc` - the main bus (what you tap on PT-CAN for datalogging): 20 messages, including the four wheel speeds, the wheel pressures, the Brake 1/2/3 status and lamp messages, the engine-torque requests, and the `0x5BA` config message.
+- `z4_gt3_mk60e5_dsc_6769162_fcan.dbc` - the F-CAN sensor-cluster bus: 4 messages carrying yaw rate and lateral/longitudinal acceleration from the yaw sensor.
+- `e90_mk60e5_dsc_7846816A_ptcan.dbc` - the road-car E9x M3 module (software 7846816A), PT-CAN: 48 messages with every field of the firmware's message tables, including the wheel speeds (`0x0CE`), DSC status (`0x19E`), speed/acceleration/yaw (`0x1A0`), wheel pressures (`0x2B2`) and the engine, gearbox and cluster frames it receives.
+- `e90_mk60e5_dsc_7846816A_fcan.dbc` - the same module's F-CAN: 32 messages, including the steering-angle sensor (`0x0C9`), the sensor cluster (`0x0CD`/`0x0D1`/`0x0D4`) and the module's command frame (`0x080`).
+- `e90_mk60e1_dsc_6769845A_ptcan.dbc` - the road-car E90 MK60E1 module (DSC81, software 6769845A), PT-CAN: 40 messages. The same message set as the M3 with frames and fields removed; meanings and scalings are carried over from the M3 where the firmware handler matches.
+- `e90_mk60e1_dsc_6769845A_fcan.dbc` - the same module's F-CAN: 16 messages; the steering-angle sensor is on `0x0C8` here.
+
+[`dbc/mk60e1-vs-mk60e5-can.md`](dbc/mk60e1-vs-mk60e5-can.md) summarises what differs on CAN between the MK60E1 and the M3 MK60E5.
 
 ## Service tool
 The hosted page (root [`index.html`](index.html), styles and scripts under [`assets/`](assets/)) combines the `0x5BA` generator with a browser diagnostic tool: read and clear faults, read and write coding, run the valve- and sensor-calibration routines, bleed the brakes, and read live data and memory over K-line. It runs entirely in Chrome/Edge via the Web Serial API (no backend); other browsers get the generator and a mock. It needs a K+DCAN cable on pin 2, and the `$27` security constants for coding writes are supplied by you, not shipped in the repo.
